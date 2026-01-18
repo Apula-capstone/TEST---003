@@ -1,0 +1,9 @@
+
+{
+  "name": "APULA - Automated Prevention Unit for Lethal Ablaze",
+  "description": "A fire detection dashboard featuring real-time sensor monitoring, camera feed integration, and AI-powered risk assessment.",
+  "requestFramePermissions": [
+    "camera",
+    "serial"
+  ]
+}
