@@ -1,137 +1,243 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>APULA FIRE_OS V3.0</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@900&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
     <style>
-        :root { --fire-red: #e21b3c; --fire-orange: #ff9900; --bg: #1a1a1a; }
-        body { background: var(--bg); color: white; font-family: 'Montserrat', sans-serif; margin: 0; padding: 20px; }
-        
-        /* Header */
-        header { text-align: center; padding-bottom: 20px; border-bottom: 3px solid var(--fire-orange); margin-bottom: 20px; }
-        header h1 { font-family: 'Orbitron', sans-serif; font-size: 4rem; color: var(--fire-orange); margin: 0; letter-spacing: 10px; }
+        :root {
+            --fire-red: #e21b3c;
+            --lava-orange: #ff6a00;
+            --glow-orange: #ffae00;
+            --dark-maroon: #4a0e0e;
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(circle, #2b0a0a 0%, #000000 100%);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            border: 10px solid var(--fire-red);
+            box-sizing: border-box;
+        }
+
+        /* Title Area */
+        header {
+            text-align: center;
+            padding: 20px;
+        }
+
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 5rem;
+            margin: 0;
+            background: linear-gradient(to bottom, var(--glow-orange), var(--fire-red));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 15px var(--lava-orange));
+            letter-spacing: 12px;
+        }
 
         /* Bento Grid */
-        .bento { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; height: 70vh; }
-        .tile { background: #2a2a2a; border-radius: 20px; padding: 20px; border: 2px solid #444; position: relative; }
-        
-        /* Camera Selection Styles */
-        .cam-options { display: flex; flex-direction: column; gap: 10px; }
-        .cam-btn { 
-            background: #333; border: 2px solid var(--fire-orange); color: white; 
-            padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold;
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 20px;
+            padding: 30px;
+            flex-grow: 1;
         }
-        .cam-btn:hover { background: var(--fire-orange); color: black; }
 
-        /* Alerts */
-        #alert-screen {
-            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: var(--fire-red); z-index: 1000; justify-content: center; align-items: center;
-            flex-direction: column; animation: flash 0.3s infinite;
+        .tile {
+            background: rgba(255, 106, 0, 0.1);
+            border: 4px solid var(--lava-orange);
+            border-radius: 40px;
+            box-shadow: inset 0 0 20px rgba(255, 106, 0, 0.2), 0 10px 0 var(--dark-maroon);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
         }
-        @keyframes flash { 0% { background: #ff0000; } 50% { background: #990000; } 100% { background: #ff0000; } }
-        
-        #video-container { grid-column: span 2; grid-row: span 2; background: black; display: flex; align-items: center; justify-content: center;}
-        video, img { width: 100%; height: 100%; border-radius: 15px; object-fit: cover; }
+
+        #camera-zone {
+            grid-column: span 2;
+            grid-row: span 2;
+            background: black;
+            border: 8px solid var(--fire-red);
+            overflow: hidden;
+        }
+
+        /* Status Pills */
+        .status-box {
+            background: var(--dark-maroon);
+            padding: 10px 40px;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            border: 3px solid var(--glow-orange);
+            margin-top: 10px;
+        }
+
+        /* Buttons */
+        .k-btn {
+            background: var(--fire-red);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 25px;
+            font-weight: 900;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-bottom: 6px solid #8b0000;
+            transition: all 0.1s;
+            margin: 5px;
+            width: 80%;
+        }
+
+        .k-btn:active {
+            transform: translateY(4px);
+            border-bottom: 2px solid #8b0000;
+        }
+
+        /* EMERGENCY ALERT */
+        #panic-screen {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--fire-red);
+            z-index: 1000;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: flash-red 0.15s infinite;
+        }
+
+        @keyframes flash-red {
+            0% { background: #ff0000; }
+            100% { background: #4a0000; }
+        }
+
+        .ack-button {
+            background: white;
+            color: var(--fire-red);
+            font-size: 3.5rem;
+            padding: 60px 100px;
+            border-radius: 100px;
+            border: 10px solid var(--glow-orange);
+            cursor: pointer;
+            font-weight: 900;
+            box-shadow: 0 20px 0 #ccc;
+        }
+
+        video { width: 100%; height: 100%; object-fit: cover; }
     </style>
 </head>
 <body>
 
 <header><h1>APULA</h1></header>
 
-<div class="bento">
-    <div id="video-container" class="tile">
-        <video id="v-player" autoplay playsinline></video>
-        <img id="mjpeg-player" style="display:none;">
+<div class="dashboard">
+    <div id="camera-zone" class="tile">
+        <video id="v-feed" autoplay playsinline></video>
+        <div style="position: absolute; top: 20px; left: 20px; color: var(--fire-red); font-weight: 900;">LIVE FEED</div>
     </div>
 
-    <div class="tile cam-options">
-        <h3>CAMERA SOURCE</h3>
-        <button class="cam-btn" onclick="setCam('webcam')">LOCAL WEBCAM</button>
-        <button class="cam-btn" onclick="setCam('wifi')">WIFI (ESP32-CAM)</button>
-        <button class="cam-btn" onclick="setCam('bt')">BLUETOOTH LINK</button>
-        <button class="cam-btn" onclick="setCam('rtsp')">RTSP STREAM</button>
+    <div class="tile" style="background: rgba(226, 27, 60, 0.2);">
+        <h2>ALPHA</h2>
+        <div id="z1" class="status-box">SAFE</div>
+    </div>
+    <div class="tile" style="background: rgba(255, 106, 0, 0.2);">
+        <h2>BETA</h2>
+        <div id="z2" class="status-box">SAFE</div>
+    </div>
+    <div class="tile" style="background: rgba(255, 174, 0, 0.2);">
+        <h2>GAMMA</h2>
+        <div id="z3" class="status-box">SAFE</div>
     </div>
 
-    <div class="tile" style="background: linear-gradient(to bottom, var(--fire-orange), #d89e00); color: black;">
-        <h3>SYSTEM STATUS</h3>
-        <p id="serial-status">DISCONNECTED</p>
-        <button class="cam-btn" style="background:black; border:none;" onclick="connect()">CONNECT SERIAL</button>
+    <div class="tile">
+        <button class="k-btn" onclick="initSerial()">CONNECT ARDUINO</button>
+        <button class="k-btn" onclick="togglePump('1')" style="background: var(--lava-orange);">PUMP ON</button>
+        <button class="k-btn" onclick="togglePump('0')" style="background: #333;">PUMP OFF</button>
     </div>
 </div>
 
-<div id="alert-screen">
-    <h1 style="font-size: 8rem; font-family: 'Orbitron';">!!! FIRE !!!</h1>
-    <button onclick="stopAlert()" style="padding: 30px 60px; font-size: 2rem; border-radius: 50px; cursor: pointer;">ACKNOWLEDGE & RESET</button>
+<div id="panic-screen">
+    <h1 style="font-size: 10rem; margin: 0; text-shadow: 0 0 50px black;">FIRE!!</h1>
+    <button class="ack-button" onclick="resetAlert()">STOP SYSTEM</button>
 </div>
 
 <script>
-    let audioCtx, osc, gain;
+    let port, reader, audioCtx, osc, gainNode;
 
-    // --- Audio System ---
-    function initPanicAlarm() {
+    // Siren setup
+    function startSiren() {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         osc = audioCtx.createOscillator();
-        gain = audioCtx.createGain();
+        gainNode = audioCtx.createGain();
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        gain.gain.value = 0;
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
         osc.start();
+        
+        window.sirenInt = setInterval(() => {
+            osc.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.1);
+            setTimeout(() => osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.1), 100);
+        }, 250);
     }
 
-    function startPanic() {
-        if(!audioCtx) initPanicAlarm();
-        gain.gain.setTargetAtTime(1, audioCtx.currentTime, 0.05);
-        // High-intensity oscillation
-        let freqLoop = setInterval(() => {
-            if(gain.gain.value < 0.1) { clearInterval(freqLoop); return; }
-            osc.frequency.exponentialRampToValueAtTime(1500, audioCtx.currentTime + 0.1);
-            setTimeout(() => osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.1), 150);
-        }, 300);
-    }
-
-    // --- Camera Logic ---
-    function setCam(type) {
-        const v = document.getElementById('v-player');
-        const m = document.getElementById('mjpeg-player');
-        v.style.display = 'none'; m.style.display = 'none';
-
-        if(type === 'webcam') {
-            v.style.display = 'block';
-            navigator.mediaDevices.getUserMedia({video: true}).then(s => v.srcObject = s);
-        } else if(type === 'wifi') {
-            const ip = prompt("Enter ESP32-CAM IP (e.g., 192.168.1.50):");
-            m.style.display = 'block';
-            m.src = `http://${ip}:81/stream`; // Common ESP32 port
-        } else {
-            alert(type.toUpperCase() + " requires external gateway/adapter.");
-        }
-    }
-
-    // --- Serial & Alert Logic ---
-    async function connect() {
-        const port = await navigator.serial.requestPort();
+    // Serial Communication
+    async function initSerial() {
+        port = await navigator.serial.requestPort();
         await port.open({ baudRate: 9600 });
-        document.getElementById('serial-status').innerText = "ONLINE";
-        const reader = port.readable.getReader();
-        while (true) {
-            const { value, done } = await reader.read();
-            const msg = new TextDecoder().decode(value);
-            if(msg.includes("FIRE:ALL")) triggerFullAlert();
+        readStream();
+    }
+
+    async function readStream() {
+        const decoder = new TextDecoder();
+        while (port.readable) {
+            const reader = port.readable.getReader();
+            try {
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    const msg = decoder.decode(value);
+                    if (msg.includes("FIRE:ALL")) triggerPanic();
+                }
+            } finally {
+                reader.releaseLock();
+            }
         }
     }
 
-    function triggerFullAlert() {
-        document.getElementById('alert-screen').style.display = 'flex';
-        startPanic();
+    function triggerPanic() {
+        document.getElementById('panic-screen').style.display = 'flex';
+        startSiren();
+        togglePump('1');
     }
 
-    function stopAlert() {
-        document.getElementById('alert-screen').style.display = 'none';
-        if(gain) gain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+    function resetAlert() {
+        document.getElementById('panic-screen').style.display = 'none';
+        if (osc) osc.stop();
+        clearInterval(window.sirenInt);
+        togglePump('0');
     }
+
+    async function togglePump(val) {
+        if (!port) return;
+        const writer = port.writable.getWriter();
+        await writer.write(new TextEncoder().encode(val));
+        writer.releaseLock();
+    }
+
+    // Webcam
+    navigator.mediaDevices.getUserMedia({video: true}).then(s => {
+        document.getElementById('v-feed').srcObject = s;
+    });
 </script>
 </body>
 </html>
