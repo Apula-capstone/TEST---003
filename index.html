@@ -2,242 +2,1534 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>APULA FIRE_OS V3.0</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@900&family=Orbitron:wght@900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 APULA FIRE_OS V3.0 | Fire-Hoot System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --fire-red: #e21b3c;
-            --lava-orange: #ff6a00;
-            --glow-orange: #ffae00;
-            --dark-maroon: #4a0e0e;
+            --kahoot-red: #e21b3c;
+            --kahoot-orange: #ff6b35;
+            --kahoot-yellow: #ffbe0b;
+            --kahoot-purple: #8338ec;
+            --kahoot-blue: #3a86ff;
+            --kahoot-bg: #1a1a2e;
+            --kahoot-card: #162447;
+            --kahoot-text: #ffffff;
+            --kahoot-glow: rgba(226, 27, 60, 0.6);
         }
 
-        body {
+        * {
             margin: 0;
-            background: radial-gradient(circle, #2b0a0a 0%, #000000 100%);
-            color: white;
-            font-family: 'Montserrat', sans-serif;
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            border: 10px solid var(--fire-red);
+            padding: 0;
             box-sizing: border-box;
         }
 
-        /* Title Area */
-        header {
-            text-align: center;
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%);
+            color: var(--kahoot-text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            animation: backgroundPulse 20s infinite alternate;
+        }
+
+        @keyframes backgroundPulse {
+            0% { background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%); }
+            100% { background: linear-gradient(135deg, #1a0f0f 0%, #2e1a1a 100%); }
+        }
+
+        .container {
             padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
         }
 
-        header h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 5rem;
-            margin: 0;
-            background: linear-gradient(to bottom, var(--glow-orange), var(--fire-red));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(0 0 15px var(--lava-orange));
-            letter-spacing: 12px;
-        }
-
-        /* Bento Grid */
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(2, 1fr);
-            gap: 20px;
-            padding: 30px;
-            flex-grow: 1;
-        }
-
-        .tile {
-            background: rgba(255, 106, 0, 0.1);
-            border: 4px solid var(--lava-orange);
-            border-radius: 40px;
-            box-shadow: inset 0 0 20px rgba(255, 106, 0, 0.2), 0 10px 0 var(--dark-maroon);
+        /* Kahoot-Style Header */
+        .header {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
+            padding: 25px 40px;
+            background: linear-gradient(90deg, var(--kahoot-red) 0%, var(--kahoot-orange) 100%);
+            border-radius: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(226, 27, 60, 0.4);
             position: relative;
+            overflow: hidden;
+            animation: headerGlow 3s infinite alternate;
         }
 
-        #camera-zone {
+        @keyframes headerGlow {
+            0% { box-shadow: 0 10px 30px rgba(226, 27, 60, 0.4); }
+            100% { box-shadow: 0 10px 50px rgba(226, 27, 60, 0.7); }
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            100% { left: 100%; }
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ffffff, #ffcccc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 3px;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            animation: logoPulse 2s infinite alternate;
+        }
+
+        @keyframes logoPulse {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.05); }
+        }
+
+        .version {
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+            font-size: 1.4rem;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 3px solid white;
+        }
+
+        /* Kahoot Bento Grid - Camera First */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, auto);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .grid-item {
+            background: linear-gradient(145deg, var(--kahoot-card), #0f1530);
+            border-radius: 25px;
+            padding: 30px;
+            border: 4px solid transparent;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .grid-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(226, 27, 60, 0.3);
+        }
+
+        .grid-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, var(--kahoot-red), var(--kahoot-orange));
+        }
+
+        /* Camera first in grid */
+        .grid-item:nth-child(1) { 
             grid-column: span 2;
             grid-row: span 2;
-            background: black;
-            border: 8px solid var(--fire-red);
+            border-color: var(--kahoot-red);
+            min-height: 500px;
+        }
+
+        .grid-item:nth-child(2) { 
+            border-color: var(--kahoot-orange);
+        }
+
+        .grid-item:nth-child(3) { 
+            grid-column: span 2;
+            border-color: var(--kahoot-yellow);
+        }
+
+        .grid-item:nth-child(4) { 
+            border-color: var(--kahoot-purple);
+        }
+
+        .grid-item:nth-child(5) { 
+            grid-column: span 2;
+            border-color: var(--kahoot-blue);
+        }
+
+        .grid-item:nth-child(6) { 
+            border-color: var(--kahoot-red);
+        }
+
+        /* Kahoot Zone Cards */
+        .zone-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .zone-card {
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
             overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
-        /* Status Pills */
-        .status-box {
-            background: var(--dark-maroon);
-            padding: 10px 40px;
-            border-radius: 50px;
+        .zone-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            animation: cardShine 3s infinite;
+        }
+
+        @keyframes cardShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .zone-card.safe {
+            background: linear-gradient(135deg, #1a2e1a, #0f1a0f);
+            border: 4px solid #4CAF50;
+        }
+
+        .zone-card.fire {
+            background: linear-gradient(135deg, #e21b3c, #ff6b35);
+            border: 4px solid #ff4444;
+            animation: firePulse 0.8s infinite;
+        }
+
+        @keyframes firePulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 20px var(--kahoot-red); }
+            50% { transform: scale(1.03); box-shadow: 0 0 40px var(--kahoot-red); }
+        }
+
+        .zone-card.warning {
+            background: linear-gradient(135deg, var(--kahoot-orange), var(--kahoot-yellow));
+            border: 4px solid var(--kahoot-yellow);
+            animation: warningPulse 2s infinite;
+        }
+
+        @keyframes warningPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .zone-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .zone-status {
             font-size: 1.5rem;
-            border: 3px solid var(--glow-orange);
-            margin-top: 10px;
-        }
-
-        /* Buttons */
-        .k-btn {
-            background: var(--fire-red);
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            border-radius: 25px;
             font-weight: 900;
-            font-size: 1.2rem;
+            margin: 15px 0;
+            padding: 12px 30px;
+            border-radius: 50px;
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .zone-status.safe {
+            background: linear-gradient(45deg, #4CAF50, #8BC34A);
+            color: white;
+        }
+
+        .zone-status.fire {
+            background: linear-gradient(45deg, #ff0000, #ff4444);
+            color: white;
+            animation: textGlow 1s infinite alternate;
+        }
+
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 10px #ff0000; }
+            100% { text-shadow: 0 0 20px #ff0000, 0 0 30px #ff0000; }
+        }
+
+        .zone-status.warning {
+            background: linear-gradient(45deg, var(--kahoot-orange), var(--kahoot-yellow));
+            color: #000;
+        }
+
+        /* Kahoot Buttons */
+        .control-panel {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 25px;
+        }
+
+        .kahoot-btn {
+            font-family: 'Montserrat', sans-serif;
+            padding: 25px;
+            border: none;
+            border-radius: 20px;
+            font-size: 1.4rem;
+            font-weight: 900;
+            color: white;
             cursor: pointer;
-            border-bottom: 6px solid #8b0000;
-            transition: all 0.1s;
-            margin: 5px;
-            width: 80%;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border: 4px solid white;
         }
 
-        .k-btn:active {
-            transform: translateY(4px);
-            border-bottom: 2px solid #8b0000;
+        .kahoot-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
         }
 
-        /* EMERGENCY ALERT */
-        #panic-screen {
-            display: none;
+        .kahoot-btn:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .connect-btn {
+            background: linear-gradient(135deg, var(--kahoot-blue), #3a86ff);
+        }
+
+        .connect-btn:hover {
+            background: linear-gradient(135deg, #2a76ef, #3a86ff);
+        }
+
+        .connect-btn.connected {
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            animation: connectedPulse 2s infinite;
+        }
+
+        @keyframes connectedPulse {
+            0%, 100% { box-shadow: 0 8px 25px rgba(76, 175, 80, 0.4); }
+            50% { box-shadow: 0 8px 35px rgba(76, 175, 80, 0.7); }
+        }
+
+        .suppression-btn {
+            background: linear-gradient(135deg, var(--kahoot-red), var(--kahoot-orange));
+        }
+
+        .suppression-btn:hover:not(:disabled) {
+            background: linear-gradient(135deg, #d10b2c, #ff5b25);
+        }
+
+        .suppression-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .suppression-btn.active {
+            animation: firePulse 0.8s infinite;
+        }
+
+        .camera-btn {
+            background: linear-gradient(135deg, var(--kahoot-purple), #8338ec);
+        }
+
+        .camera-btn:hover {
+            background: linear-gradient(135deg, #7328dc, #8338ec);
+        }
+
+        /* Video Feed - Kahoot Style - LARGER */
+        .video-container {
+            width: 100%;
+            height: 100%;
+            min-height: 450px;
+            background: linear-gradient(135deg, #000000, #1a1a1a);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            border: 4px solid var(--kahoot-red);
+            box-shadow: 0 0 40px rgba(226, 27, 60, 0.4);
+        }
+
+        #videoFeed {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .camera-controls {
+            position: absolute;
+            bottom: 25px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 0 25px;
+        }
+
+        .kahoot-select {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, var(--kahoot-purple), #5a1cb9);
+            color: white;
+            border: 3px solid white;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .kahoot-select:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(131, 56, 236, 0.5);
+        }
+
+        .kahoot-select option {
+            background: var(--kahoot-card);
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Kahoot Emergency Modal - MAJOR ALERT */
+        .emergency-modal {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--fire-red);
-            z-index: 1000;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(45deg, #ff0000, var(--kahoot-orange));
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            animation: flash-red 0.15s infinite;
+            z-index: 9999;
+            animation: emergencyFlash 0.3s infinite;
         }
 
-        @keyframes flash-red {
-            0% { background: #ff0000; }
-            100% { background: #4a0000; }
+        @keyframes emergencyFlash {
+            0%, 100% { 
+                opacity: 1;
+                background: linear-gradient(45deg, #ff0000, var(--kahoot-orange));
+            }
+            50% { 
+                opacity: 0.8;
+                background: linear-gradient(45deg, #000000, #ff0000);
+            }
         }
 
-        .ack-button {
-            background: white;
-            color: var(--fire-red);
-            font-size: 3.5rem;
-            padding: 60px 100px;
-            border-radius: 100px;
-            border: 10px solid var(--glow-orange);
-            cursor: pointer;
+        .emergency-content {
+            text-align: center;
+            max-width: 1000px;
+            padding: 60px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 50px;
+            border: 8px solid white;
+            box-shadow: 0 0 100px rgba(255, 0, 0, 0.9);
+            animation: emergencyPulse 0.5s infinite alternate;
+        }
+
+        @keyframes emergencyPulse {
+            0% { 
+                transform: scale(1);
+                box-shadow: 0 0 100px rgba(255, 0, 0, 0.9);
+            }
+            100% { 
+                transform: scale(1.05);
+                box-shadow: 0 0 150px rgba(255, 0, 0, 1);
+            }
+        }
+
+        .emergency-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 7rem;
+            color: white;
+            margin-bottom: 40px;
+            text-shadow: 0 0 50px rgba(255, 255, 255, 1);
+            animation: emergencyShake 0.1s infinite;
+        }
+
+        @keyframes emergencyShake {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(-20px) rotate(-2deg); }
+            50% { transform: translateX(20px) rotate(2deg); }
+            75% { transform: translateX(-20px) rotate(-2deg); }
+        }
+
+        .emergency-zone {
+            font-size: 5rem;
+            margin: 30px 0;
+            color: white;
             font-weight: 900;
-            box-shadow: 0 20px 0 #ccc;
+            background: linear-gradient(45deg, #ff0000, #ff8800, #ffff00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
+            animation: zoneGlow 1s infinite alternate;
         }
 
-        video { width: 100%; height: 100%; object-fit: cover; }
+        @keyframes zoneGlow {
+            0% { text-shadow: 0 0 20px rgba(255, 0, 0, 0.8); }
+            100% { text-shadow: 0 0 60px rgba(255, 255, 0, 0.9); }
+        }
+
+        .emergency-message {
+            font-size: 2.8rem;
+            color: white;
+            margin: 40px 0;
+            font-weight: bold;
+            text-shadow: 0 0 30px white;
+            animation: messageBlink 0.5s infinite;
+        }
+
+        @keyframes messageBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .acknowledge-btn {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            padding: 40px 120px;
+            background: linear-gradient(135deg, #000000, #222222);
+            color: white;
+            border: 8px solid #00ff00;
+            border-radius: 100px;
+            cursor: pointer;
+            margin-top: 60px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            box-shadow: 0 0 80px rgba(0, 255, 0, 0.8);
+            animation: acknowledgeGlow 1.5s infinite alternate;
+        }
+
+        @keyframes acknowledgeGlow {
+            0% { 
+                box-shadow: 0 0 80px rgba(0, 255, 0, 0.8);
+                border-color: #00ff00;
+            }
+            100% { 
+                box-shadow: 0 0 120px rgba(0, 255, 0, 1);
+                border-color: #ffffff;
+            }
+        }
+
+        .acknowledge-btn:hover {
+            transform: scale(1.15);
+            background: linear-gradient(135deg, #00aa00, #008800);
+        }
+
+        /* Major Alert Notification */
+        .major-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ff0000, #ff4400);
+            padding: 40px 80px;
+            border-radius: 30px;
+            border: 6px solid white;
+            box-shadow: 0 0 100px rgba(255, 0, 0, 0.9);
+            z-index: 10000;
+            display: none;
+            animation: alertPulse 0.5s infinite;
+        }
+
+        @keyframes alertPulse {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 100px rgba(255, 0, 0, 0.9);
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.1);
+                box-shadow: 0 0 150px rgba(255, 0, 0, 1);
+            }
+        }
+
+        .major-alert-content {
+            text-align: center;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .major-alert-title {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px white;
+        }
+
+        .major-alert-subtitle {
+            font-size: 2rem;
+            margin-bottom: 30px;
+        }
+
+        .test-alert-btn {
+            padding: 20px 50px;
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #000000, #333333);
+            color: white;
+            border: 4px solid white;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .test-alert-btn:hover {
+            transform: scale(1.1);
+            background: linear-gradient(135deg, #ff0000, #ff4400);
+        }
+
+        /* Kahoot Status Bar */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: linear-gradient(90deg, var(--kahoot-red), var(--kahoot-orange));
+            border-radius: 20px;
+            margin-top: 25px;
+            box-shadow: 0 8px 25px rgba(226, 27, 60, 0.3);
+            border: 3px solid white;
+        }
+
+        .serial-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .status-dot {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #666;
+            border: 3px solid white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .status-dot.connected {
+            background: #4CAF50;
+            animation: dotPulse 1.5s infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { 
+                box-shadow: 0 0 10px #4CAF50;
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 20px #4CAF50;
+                transform: scale(1.2);
+            }
+        }
+
+        .system-time {
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Kahoot System Log */
+        .system-log {
+            height: 250px;
+            overflow-y: auto;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(26, 36, 71, 0.8));
+            padding: 20px;
+            border-radius: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            border: 3px solid var(--kahoot-orange);
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .system-log div {
+            margin-bottom: 10px;
+            padding: 8px 15px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--kahoot-orange);
+            animation: logEntry 0.5s ease-out;
+        }
+
+        @keyframes logEntry {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Fire Particle Animation */
+        .fire-particle {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, #ff0000, #ff8800);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9998;
+            filter: blur(2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .grid-item:nth-child(1) {
+                grid-column: span 2;
+                grid-row: span 1;
+            }
+            
+            .zone-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .grid-item {
+                grid-column: span 1 !important;
+                grid-row: span 1 !important;
+            }
+            
+            .zone-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .control-panel {
+                grid-template-columns: 1fr;
+            }
+            
+            .emergency-title {
+                font-size: 3.5rem;
+            }
+            
+            .emergency-zone {
+                font-size: 2.5rem;
+            }
+            
+            .emergency-message {
+                font-size: 1.8rem;
+            }
+            
+            .acknowledge-btn {
+                font-size: 2rem;
+                padding: 25px 50px;
+            }
+            
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .major-alert-title {
+                font-size: 2.5rem;
+            }
+            
+            .major-alert-subtitle {
+                font-size: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
-
-<header><h1>APULA</h1></header>
-
-<div class="dashboard">
-    <div id="camera-zone" class="tile">
-        <video id="v-feed" autoplay playsinline></video>
-        <div style="position: absolute; top: 20px; left: 20px; color: var(--fire-red); font-weight: 900;">LIVE FEED</div>
+    <!-- MAJOR ALERT NOTIFICATION -->
+    <div class="major-alert" id="majorAlert">
+        <div class="major-alert-content">
+            <div class="major-alert-title">🚨 TRIPLE FIRE DETECTED!</div>
+            <div class="major-alert-subtitle">ALL ZONES: ALPHA, BETA, GAMMA</div>
+            <div style="font-size: 1.5rem; margin: 20px 0; color: #ffcccc;">
+                Emergency Mode Activated - Nonstop Audio Alert
+            </div>
+            <button class="test-alert-btn" id="testAlertBtn">
+                🔥 TEST TRIPLE ALERT
+            </button>
+        </div>
     </div>
 
-    <div class="tile" style="background: rgba(226, 27, 60, 0.2);">
-        <h2>ALPHA</h2>
-        <div id="z1" class="status-box">SAFE</div>
+    <!-- Kahoot Emergency Modal -->
+    <div class="emergency-modal" id="emergencyModal">
+        <div class="emergency-content">
+            <div class="emergency-title">🚨 MAJOR EMERGENCY! 🚨</div>
+            <div class="emergency-zone" id="emergencyZone">ALL ZONES COMPROMISED!</div>
+            <div class="emergency-message">
+                🔥 TRIPLE FIRE DETECTION - MAXIMUM ALERT! 🔥
+            </div>
+            <div style="font-size: 2rem; color: #ffcccc; margin: 30px 0;">
+                ⚠️ Nonstop Audio Alert Active ⚠️<br>
+                ⚡ All Suppression Systems Engaged ⚡<br>
+                🚒 Emergency Services Notified 🚒
+            </div>
+            <button class="acknowledge-btn" id="acknowledgeEmergency">
+                ✅ ACKNOWLEDGE & SILENCE ALARM
+            </button>
+        </div>
     </div>
-    <div class="tile" style="background: rgba(255, 106, 0, 0.2);">
-        <h2>BETA</h2>
-        <div id="z2" class="status-box">SAFE</div>
+
+    <div class="container">
+        <!-- Kahoot-Style Header -->
+        <div class="header">
+            <div class="logo">🔥 FIRE-HOOT 🔥</div>
+            <div class="version">APULA FIRE_OS V3.0</div>
+        </div>
+
+        <!-- Kahoot Bento Grid - CAMERA FIRST -->
+        <div class="bento-grid">
+            <!-- Camera Feed - FIRST AND LARGEST -->
+            <div class="grid-item">
+                <h2 style="background: linear-gradient(45deg, var(--kahoot-red), var(--kahoot-orange)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 25px; font-family: 'Orbitron', sans-serif; font-size: 2.5rem;">
+                    📹 LIVE FIRE MONITORING CAMERA
+                </h2>
+                <div class="video-container">
+                    <video id="videoFeed" autoplay playsinline></video>
+                    <div class="camera-controls">
+                        <select class="kahoot-select" id="cameraSource">
+                            <option value="webcam">📱 Webcam (WebRTC)</option>
+                            <option value="esp32">📶 ESP32-CAM WiFi</option>
+                            <option value="rtsp">🔗 RTSP Stream</option>
+                        </select>
+                        <button class="kahoot-select" id="startCamera">🎬 START LIVE FEED</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zone Monitoring - Kahoot Style -->
+            <div class="grid-item">
+                <h2 style="background: linear-gradient(45deg, var(--kahoot-orange), var(--kahoot-yellow)); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 25px; font-family: 'Orbitron', sans-serif; font-size: 2.2rem;">
+                    🚨 FIRE ZONE STATUS
+                </h2>
+                <div class="zone-container">
+                    <div class="zone-card safe" id="zoneAlpha">
+                        <div class="zone-title" style="color: #fff;">ALPHA</div>
+                        <div class="zone-status safe">SAFE</div>
+                        <div class="zone-sensor" style="color: #ccc; margin-top: 15px; font-size: 1.2rem;">IR SENSOR: 0%</div>
+                    </div>
+                    <div class="zone-card safe" id="zoneBeta">
+                        <div class="zone-title" style="color: #fff;">BETA</div>
+                        <div class="zone-status safe">SAFE</div>
+                        <div class="zone-sensor" style="color: #ccc; margin-top: 15px; font-size: 1.2rem;">IR SENSOR: 0%</div>
+                    </div>
+                    <div class="zone-card safe" id="zoneGamma">
+                        <div class="zone-title" style="color: #fff;">GAMMA</div>
+                        <div class="zone-status safe">SAFE</div>
+                        <div class="zone-sensor" style="color: #ccc; margin-top: 15px; font-size: 1.2rem;">IR SENSOR: 0%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hardware Interface - Kahoot Style -->
+            <div class="grid-item">
+                <h2 style="background: linear-gradient(45deg, var(--kahoot-yellow), #ffbe0b); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 25px; font-family: 'Orbitron', sans-serif; font-size: 2.2rem;">
+                    ⚡ HARDWARE CONTROL
+                </h2>
+                <button class="kahoot-btn connect-btn" id="connectSerial">
+                    🔌 CONNECT ARDUINO
+                </button>
+                <div style="margin-top: 25px; color: #ccc; font-size: 1.1rem; background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 15px; border-left: 4px solid var(--kahoot-yellow);">
+                    <p>🔹 Protocol: <strong>Web Serial API</strong></p>
+                    <p>🔹 Baud Rate: <strong>9600</strong></p>
+                    <p>🔹 Command Set: <strong>W1/W0</strong></p>
+                    <p>🔹 Status: <span id="serialStatusText">DISCONNECTED</span></p>
+                </div>
+            </div>
+
+            <!-- Suppression System - Kahoot Style -->
+            <div class="grid-item">
+                <h2 style="background: linear-gradient(45deg, var(--kahoot-purple), #8338ec); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 25px; font-family: 'Orbitron', sans-serif; font-size: 2.2rem;">
+                    💦 SUPPRESSION SYSTEM
+                </h2>
+                <button class="kahoot-btn suppression-btn" id="suppressionControl" disabled>
+                    💧 SYSTEM STANDBY
+                </button>
+                <div style="margin-top: 25px; color: #ccc; font-size: 1.1rem; background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 15px; border-left: 4px solid var(--kahoot-purple);">
+                    <p>🔹 Status: <strong id="suppressionStatus">INACTIVE</strong></p>
+                    <p>🔹 Protocol: <strong>W1=ACTIVATE, W0=DEACTIVATE</strong></p>
+                    <p>🔹 Mode: <strong>AUTO-TRIGGER</strong></p>
+                    <p>🔹 Cooldown: <strong>NO COOLDOWN</strong></p>
+                </div>
+            </div>
+
+            <!-- System Log - Kahoot Style -->
+            <div class="grid-item">
+                <h2 style="background: linear-gradient(45deg, var(--kahoot-blue), #3a86ff); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 25px; font-family: 'Orbitron', sans-serif; font-size: 2.2rem;">
+                    📊 SYSTEM LOG
+                </h2>
+                <div class="system-log" id="systemLog">
+                    <div>> 🚀 System Initialized: FIRE-HOOT V3.0 Online</div>
+                    <div>> 🎨 Theme: Kahoot Fire-Red Active</div>
+                    <div>> 🔌 Serial Bridge: Ready</div>
+                    <div>> 🔊 Audio Engine: Ready</div>
+                    <div>> 👁️ Monitoring: All zones active...</div>
+                </div>
+            </div>
+
+            <!-- Audio Control & Test Alert - Kahoot Style -->
+            <div class="grid-item">
+                <h2 style="background: linear-gradient(45deg, var(--kahoot-red), #ff0000); -webkit-background-clip: text; background-clip: text; color: transparent; margin-bottom: 25px; font-family: 'Orbitron', sans-serif; font-size: 2.2rem;">
+                    🔊 EMERGENCY ALERT SYSTEM
+                </h2>
+                <div style="display: grid; gap: 15px;">
+                    <button class="kahoot-btn camera-btn" id="testSiren">
+                        🔔 TEST SIREN
+                    </button>
+                    <button class="kahoot-btn" style="background: linear-gradient(135deg, #ff0000, #ff4400);" id="testTripleFire">
+                        🔥 TEST TRIPLE FIRE ALERT
+                    </button>
+                </div>
+                <div style="margin-top: 25px; color: #ccc; font-size: 1.1rem; background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 15px; border-left: 4px solid var(--kahoot-red);">
+                    <p>🔹 Engine: <strong>Web Audio API</strong></p>
+                    <p>🔹 Frequency: <strong>800-1200Hz Oscillation</strong></p>
+                    <p>🔹 Volume: <strong>MAX</strong></p>
+                    <p>🔹 Trigger: <strong>Auto on Fire Detection</strong></p>
+                    <p>🔹 Mode: <strong>Nonstop until acknowledged</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kahoot Status Bar -->
+        <div class="status-bar">
+            <div class="serial-status">
+                <div class="status-dot" id="serialStatus"></div>
+                <span id="statusText">SERIAL: DISCONNECTED</span>
+            </div>
+            <div class="system-time" id="systemTime">--:--:--</div>
+            <div style="font-weight: bold; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);">
+                🔥 TRIPLE-FIRE ALERT SYSTEM | ACTIVE 🔥
+            </div>
+        </div>
     </div>
-    <div class="tile" style="background: rgba(255, 174, 0, 0.2);">
-        <h2>GAMMA</h2>
-        <div id="z3" class="status-box">SAFE</div>
+
+    <!-- RTSP Input Modal - Kahoot Style -->
+    <div id="rtspModal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 1001; justify-content: center; align-items: center;">
+        <div style="background: linear-gradient(135deg, var(--kahoot-card), #0f1530); padding: 50px; border-radius: 30px; max-width: 600px; width: 90%; border: 4px solid var(--kahoot-purple); box-shadow: 0 0 60px rgba(131, 56, 236, 0.5);">
+            <h2 style="color: var(--kahoot-purple); margin-bottom: 30px; font-family: 'Orbitron', sans-serif; font-size: 2.5rem; text-align: center;">📹 ENTER RTSP URL</h2>
+            <input type="text" id="rtspUrl" placeholder="rtsp://username:password@ip:port/stream" style="width: 100%; padding: 20px; margin: 30px 0; border: 4px solid var(--kahoot-purple); border-radius: 15px; background: rgba(0,0,0,0.7); color: white; font-size: 1.2rem; font-family: 'Montserrat', sans-serif;">
+            <div style="display: flex; gap: 20px;">
+                <button onclick="connectRTSP()" style="flex: 1; padding: 20px; background: linear-gradient(135deg, var(--kahoot-purple), #5a1cb9); color: white; border: 3px solid white; border-radius: 15px; cursor: pointer; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px;">🚀 CONNECT</button>
+                <button onclick="document.getElementById('rtspModal').style.display='none'" style="flex: 1; padding: 20px; background: linear-gradient(135deg, #666, #333); color: white; border: 3px solid white; border-radius: 15px; cursor: pointer; font-weight: 900; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px;">❌ CANCEL</button>
+            </div>
+        </div>
     </div>
 
-    <div class="tile">
-        <button class="k-btn" onclick="initSerial()">CONNECT ARDUINO</button>
-        <button class="k-btn" onclick="togglePump('1')" style="background: var(--lava-orange);">PUMP ON</button>
-        <button class="k-btn" onclick="togglePump('0')" style="background: #333;">PUMP OFF</button>
-    </div>
-</div>
+    <script>
+        class KahootFireSystem {
+            constructor() {
+                this.serialPort = null;
+                this.reader = null;
+                this.writer = null;
+                this.audioContext = null;
+                this.oscillator = null;
+                this.gainNode = null;
+                this.sirenActive = false;
+                this.suppressionActive = false;
+                this.emergencyZone = null;
+                this.cameraStream = null;
+                this.tripleFireActive = false;
+                this.nonstopAudio = false;
+                
+                this.systemLog = document.getElementById('systemLog');
+                this.serialStatus = document.getElementById('serialStatus');
+                this.serialStatusText = document.getElementById('serialStatusText');
+                this.statusText = document.getElementById('statusText');
+                this.connectBtn = document.getElementById('connectSerial');
+                this.suppressionBtn = document.getElementById('suppressionControl');
+                this.suppressionStatus = document.getElementById('suppressionStatus');
+                this.emergencyModal = document.getElementById('emergencyModal');
+                this.majorAlert = document.getElementById('majorAlert');
+                this.videoFeed = document.getElementById('videoFeed');
+                this.cameraSource = document.getElementById('cameraSource');
+                this.systemTime = document.getElementById('systemTime');
+                
+                this.zoneElements = {
+                    alpha: document.getElementById('zoneAlpha'),
+                    beta: document.getElementById('zoneBeta'),
+                    gamma: document.getElementById('zoneGamma')
+                };
 
-<div id="panic-screen">
-    <h1 style="font-size: 10rem; margin: 0; text-shadow: 0 0 50px black;">FIRE!!</h1>
-    <button class="ack-button" onclick="resetAlert()">STOP SYSTEM</button>
-</div>
+                this.fireParticles = [];
+                this.initialize();
+            }
 
-<script>
-    let port, reader, audioCtx, osc, gainNode;
+            async initialize() {
+                this.updateTime();
+                setInterval(() => this.updateTime(), 1000);
+                
+                this.connectBtn.addEventListener('click', () => this.toggleSerialConnection());
+                document.getElementById('testSiren').addEventListener('click', () => this.testSiren());
+                document.getElementById('testTripleFire').addEventListener('click', () => this.testTripleFireAlert());
+                document.getElementById('testAlertBtn').addEventListener('click', () => this.testTripleFireAlert());
+                document.getElementById('acknowledgeEmergency').addEventListener('click', () => this.acknowledgeEmergency());
+                document.getElementById('startCamera').addEventListener('click', () => this.startCamera());
+                this.suppressionBtn.addEventListener('click', () => this.toggleSuppression());
+                
+                this.cameraSource.addEventListener('change', (e) => {
+                    if (e.target.value === 'rtsp') {
+                        document.getElementById('rtspModal').style.display = 'flex';
+                    }
+                });
 
-    // Siren setup
-    function startSiren() {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        osc = audioCtx.createOscillator();
-        gainNode = audioCtx.createGain();
-        osc.type = 'sawtooth';
-        osc.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        osc.start();
-        
-        window.sirenInt = setInterval(() => {
-            osc.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.1);
-            setTimeout(() => osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.1), 100);
-        }, 250);
-    }
+                // Create fire particles for emergency mode
+                this.createFireParticles();
+                
+                this.log('🚀 System initialized: Kahoot Fire-Hoot V3.0 operational', 'system');
+                this.log('🎨 Fire-Red Kahoot theme activated', 'theme');
+                this.log('👁️ Monitoring 3-zone IR sensor array...', 'monitor');
+                this.log('🔊 Nonstop audio alert system: READY', 'audio');
+            }
 
-    // Serial Communication
-    async function initSerial() {
-        port = await navigator.serial.requestPort();
-        await port.open({ baudRate: 9600 });
-        readStream();
-    }
-
-    async function readStream() {
-        const decoder = new TextDecoder();
-        while (port.readable) {
-            const reader = port.readable.getReader();
-            try {
-                while (true) {
-                    const { value, done } = await reader.read();
-                    if (done) break;
-                    const msg = decoder.decode(value);
-                    if (msg.includes("FIRE:ALL")) triggerPanic();
+            createFireParticles() {
+                for (let i = 0; i < 100; i++) {
+                    setTimeout(() => {
+                        const particle = document.createElement('div');
+                        particle.className = 'fire-particle';
+                        particle.style.left = Math.random() * 100 + 'vw';
+                        particle.style.top = '-20px';
+                        particle.style.opacity = '0';
+                        particle.style.width = (Math.random() * 20 + 5) + 'px';
+                        particle.style.height = particle.style.width;
+                        document.body.appendChild(particle);
+                        this.fireParticles.push(particle);
+                    }, i * 50);
                 }
-            } finally {
-                reader.releaseLock();
+            }
+
+            animateFireParticles() {
+                this.fireParticles.forEach(particle => {
+                    particle.style.opacity = '1';
+                    particle.style.transition = 'none';
+                    particle.style.left = Math.random() * 100 + 'vw';
+                    particle.style.top = '-20px';
+                    
+                    setTimeout(() => {
+                        particle.style.transition = 'all 3s cubic-bezier(0.1, 0.8, 0.2, 1)';
+                        particle.style.left = (Math.random() * 100) + 'vw';
+                        particle.style.top = '100vh';
+                        particle.style.opacity = '0';
+                    }, 10);
+                });
+
+                if (this.tripleFireActive) {
+                    setTimeout(() => this.animateFireParticles(), 1000);
+                } else {
+                    setTimeout(() => this.animateFireParticles(), 3000);
+                }
+            }
+
+            updateTime() {
+                const now = new Date();
+                this.systemTime.textContent = now.toLocaleTimeString('en-US', {hour12: false});
+            }
+
+            log(message, type = 'info') {
+                const logEntry = document.createElement('div');
+                const timestamp = new Date().toLocaleTimeString();
+                
+                // Add emoji based on type
+                if (type === 'error') logEntry.innerHTML = `❌ [${timestamp}] ${message}`;
+                else if (type === 'success') logEntry.innerHTML = `✅ [${timestamp}] ${message}`;
+                else if (type === 'warning') logEntry.innerHTML = `⚠️ [${timestamp}] ${message}`;
+                else if (type === 'system') logEntry.innerHTML = `⚙️ [${timestamp}] ${message}`;
+                else if (type === 'theme') logEntry.innerHTML = `🎨 [${timestamp}] ${message}`;
+                else if (type === 'monitor') logEntry.innerHTML = `👁️ [${timestamp}] ${message}`;
+                else if (type === 'audio') logEntry.innerHTML = `🔊 [${timestamp}] ${message}`;
+                else if (type === 'fire') logEntry.innerHTML = `🔥 [${timestamp}] ${message}`;
+                else logEntry.innerHTML = `> [${timestamp}] ${message}`;
+                
+                this.systemLog.appendChild(logEntry);
+                this.systemLog.scrollTop = this.systemLog.scrollHeight;
+                console.log(message);
+            }
+
+            async toggleSerialConnection() {
+                if (this.serialPort) {
+                    await this.disconnectSerial();
+                } else {
+                    await this.connectSerial();
+                }
+            }
+
+            async connectSerial() {
+                try {
+                    if (!('serial' in navigator)) {
+                        throw new Error('Web Serial API not supported in this browser');
+                    }
+
+                    this.serialPort = await navigator.serial.requestPort();
+                    await this.serialPort.open({ baudRate: 9600 });
+
+                    this.writer = this.serialPort.writable.getWriter();
+                    this.reader = this.serialPort.readable.getReader();
+
+                    this.serialStatus.classList.add('connected');
+                    this.serialStatusText.textContent = 'CONNECTED';
+                    this.statusText.textContent = 'SERIAL: CONNECTED';
+                    this.connectBtn.textContent = '🔌 DISCONNECT ARDUINO';
+                    this.connectBtn.classList.add('connected');
+                    this.suppressionBtn.disabled = false;
+                    this.suppressionBtn.textContent = '💧 MANUAL SUPPRESSION';
+                    this.suppressionBtn.style.background = 'linear-gradient(135deg, var(--kahoot-red), var(--kahoot-orange))';
+
+                    this.log('🔌 Serial connection established: Arduino Uno connected', 'success');
+                    this.log('📡 Monitoring 3-zone IR sensor array...', 'monitor');
+                    this.log('🚨 Triple-fire alert system: ARMED', 'warning');
+
+                    this.readSerialData();
+
+                } catch (error) {
+                    this.log(`❌ Serial connection failed: ${error.message}`, 'error');
+                    alert('🔌 Serial connection failed. Please ensure Arduino is connected and refresh the page.');
+                }
+            }
+
+            async disconnectSerial() {
+                if (this.reader) {
+                    this.reader.cancel();
+                    this.reader = null;
+                }
+                if (this.writer) {
+                    this.writer.releaseLock();
+                    this.writer = null;
+                }
+                if (this.serialPort) {
+                    await this.serialPort.close();
+                    this.serialPort = null;
+                }
+
+                this.serialStatus.classList.remove('connected');
+                this.serialStatusText.textContent = 'DISCONNECTED';
+                this.statusText.textContent = 'SERIAL: DISCONNECTED';
+                this.connectBtn.textContent = '🔌 CONNECT ARDUINO';
+                this.connectBtn.classList.remove('connected');
+                this.suppressionBtn.disabled = true;
+                this.suppressionBtn.textContent = '💧 SYSTEM STANDBY';
+
+                this.log('🔌 Serial connection terminated', 'warning');
+            }
+
+            async readSerialData() {
+                try {
+                    while (this.reader) {
+                        const { value, done } = await this.reader.read();
+                        if (done) break;
+                        
+                        const text = new TextDecoder().decode(value);
+                        this.processSerialData(text.trim());
+                    }
+                } catch (error) {
+                    if (error.name !== 'InterruptedError') {
+                        this.log(`❌ Serial read error: ${error.message}`, 'error');
+                    }
+                }
+            }
+
+            processSerialData(data) {
+                this.log(`📡 Serial RX: ${data}`, 'monitor');
+
+                // Check for TRIPLE FIRE DETECTION signal
+                if (data === 'TRIPLE_FIRE' || data.includes('ALL_ZONES_FIRE')) {
+                    this.activateTripleFireAlert();
+                    return;
+                }
+
+                // Parse fire detection commands
+                if (data.startsWith('FIRE:')) {
+                    const zoneNum = parseInt(data.charAt(5));
+                    this.handleFireDetection(zoneNum);
+                }
+                
+                // Parse sensor values
+                if (data.includes('A:') || data.includes('B:') || data.includes('G:')) {
+                    this.updateSensorValues(data);
+                }
+            }
+
+            handleFireDetection(zoneNum) {
+                const zones = ['alpha', 'beta', 'gamma'];
+                const zoneNames = ['ALPHA', 'BETA', 'GAMMA'];
+                const zone = zones[zoneNum - 1];
+                const zoneName = zoneNames[zoneNum - 1];
+
+                if (!zone) return;
+
+                // Update zone to fire status
+                this.updateZone(zone, 100);
+                
+                // Check if all zones are on fire
+                const allZonesOnFire = this.checkAllZonesOnFire();
+                
+                if (allZonesOnFire && !this.tripleFireActive) {
+                    this.activateTripleFireAlert();
+                } else if (!this.tripleFireActive) {
+                    this.emergencyZone = zone;
+                    this.activateEmergency(zoneName);
+                    this.activateSuppression();
+                }
+            }
+
+            checkAllZonesOnFire() {
+                const alphaStatus = this.zoneElements.alpha.querySelector('.zone-status').textContent;
+                const betaStatus = this.zoneElements.beta.querySelector('.zone-status').textContent;
+                const gammaStatus = this.zoneElements.gamma.querySelector('.zone-status').textContent;
+                
+                return alphaStatus.includes('FIRE') && 
+                       betaStatus.includes('FIRE') && 
+                       gammaStatus.includes('FIRE');
+            }
+
+            activateTripleFireAlert() {
+                if (this.tripleFireActive) return;
+                
+                this.tripleFireActive = true;
+                this.nonstopAudio = true;
+                
+                // Update all zones to fire status
+                this.updateZone('alpha', 100);
+                this.updateZone('beta', 100);
+                this.updateZone('gamma', 100);
+                
+                // Show major alert notification first
+                this.majorAlert.style.display = 'block';
+                
+                // Then show full emergency modal after 3 seconds
+                setTimeout(() => {
+                    this.majorAlert.style.display = 'none';
+                    this.emergencyModal.style.display = 'flex';
+                }, 3000);
+                
+                // Start nonstop audio
+                this.startNonstopEmergencySiren();
+                this.animateFireParticles();
+                this.activateSuppression();
+                
+                this.log('🔥🔥🔥 TRIPLE FIRE DETECTED! ALL ZONES COMPROMISED!', 'fire');
+                this.log('🔊 NONSTOP AUDIO ALERT ACTIVATED', 'audio');
+                this.log('💦 ALL SUPPRESSION SYSTEMS ENGAGED', 'warning');
+                this.log('🚨 MAJOR EMERGENCY - IMMEDIATE ACTION REQUIRED', 'error');
+            }
+
+            updateSensorValues(data) {
+                // Parse sensor values like "A:85 B:10 G:5"
+                const parts = data.split(' ');
+                parts.forEach(part => {
+                    if (part.includes('A:')) {
+                        this.updateZone('alpha', parseInt(part.substring(2)));
+                    } else if (part.includes('B:')) {
+                        this.updateZone('beta', parseInt(part.substring(2)));
+                    } else if (part.includes('G:')) {
+                        this.updateZone('gamma', parseInt(part.substring(2)));
+                    }
+                });
+                
+                // Check for triple fire after updating
+                if (this.checkAllZonesOnFire() && !this.tripleFireActive) {
+                    this.activateTripleFireAlert();
+                }
+            }
+
+            updateZone(zone, value) {
+                const element = this.zoneElements[zone];
+                const status = element.querySelector('.zone-status');
+                const sensor = element.querySelector('.zone-sensor');
+
+                sensor.textContent = `IR SENSOR: ${value}%`;
+
+                if (value > 70) {
+                    // Fire detected
+                    element.className = 'zone-card fire';
+                    status.textContent = 'FIRE! 🔥';
+                    status.className = 'zone-status fire';
+                } else if (value > 30) {
+                    // Warning
+                    element.className = 'zone-card warning';
+                    status.textContent = 'WARNING ⚠️';
+                    status.className = 'zone-status warning';
+                } else {
+                    // Safe
+                    element.className = 'zone-card safe';
+                    status.textContent = 'SAFE ✅';
+                    status.className = 'zone-status safe';
+                }
+            }
+
+            testTripleFireAlert() {
+                if (this.tripleFireActive) {
+                    this.acknowledgeEmergency();
+                    return;
+                }
+                
+                this.log('🔥 TEST: Simulating triple fire detection', 'warning');
+                this.activateTripleFireAlert();
+            }
+
+            activateEmergency(zoneName) {
+                if (this.tripleFireActive) return;
+                
+                document.getElementById('emergencyZone').textContent = `${zoneName} ZONE`;
+                this.emergencyModal.style.display = 'flex';
+                this.startSiren();
+                this.animateFireParticles();
+                this.log(`🚨 EMERGENCY: Fire detected in ${zoneName} zone!`, 'error');
+            }
+
+            acknowledgeEmergency() {
+                this.emergencyModal.style.display = 'none';
+                this.majorAlert.style.display = 'none';
+                this.tripleFireActive = false;
+                this.nonstopAudio = false;
+                this.emergencyZone = null;
+                this.stopSiren();
+                this.deactivateSuppression();
+                
+                // Reset all zones to safe
+                Object.keys(this.zoneElements).forEach(zone => {
+                    this.updateZone(zone, 0);
+                });
+
+                this.log('✅ EMERGENCY ACKNOWLEDGED: Alarm silenced, system reset', 'success');
+                this.log('🔊 Nonstop audio alert: STOPPED', 'audio');
+            }
+
+            async activateSuppression() {
+                if (this.writer && !this.suppressionActive) {
+                    try {
+                        await this.sendSerialCommand('W1');
+                        this.suppressionActive = true;
+                        this.suppressionStatus.textContent = 'ACTIVE 🔥';
+                        this.suppressionStatus.style.color = '#ff0000';
+                        this.suppressionBtn.classList.add('active');
+                        this.suppressionBtn.textContent = '💦 DEACTIVATE SUPPRESSION';
+                        this.suppressionBtn.style.background = 'linear-gradient(135deg, #ff0000, #ff4444)';
+                        this.log('💦 Suppression system: ACTIVATED (Auto-trigger)', 'success');
+                    } catch (error) {
+                        this.log(`❌ Suppression activation failed: ${error.message}`, 'error');
+                    }
+                }
+            }
+
+            async deactivateSuppression() {
+                if (this.writer && this.suppressionActive) {
+                    try {
+                        await this.sendSerialCommand('W0');
+                        this.suppressionActive = false;
+                        this.suppressionStatus.textContent = 'INACTIVE';
+                        this.suppressionStatus.style.color = '#ccc';
+                        this.suppressionBtn.classList.remove('active');
+                        this.suppressionBtn.textContent = '💧 MANUAL SUPPRESSION';
+                        this.suppressionBtn.style.background = 'linear-gradient(135deg, var(--kahoot-red), var(--kahoot-orange))';
+                        this.log('💦 Suppression system: DEACTIVATED', 'warning');
+                    } catch (error) {
+                        this.log(`❌ Suppression deactivation failed: ${error.message}`, 'error');
+                    }
+                }
+            }
+
+            async toggleSuppression() {
+                if (this.suppressionActive) {
+                    await this.deactivateSuppression();
+                } else {
+                    await this.activateSuppression();
+                    this.log('💦 Suppression system: MANUALLY ACTIVATED', 'success');
+                }
+            }
+
+            async sendSerialCommand(command) {
+                if (this.writer) {
+                    const data = new TextEncoder().encode(command + '\n');
+                    await this.writer.write(data);
+                    this.log(`📡 Serial TX: ${command}`, 'monitor');
+                }
+            }
+
+            startNonstopEmergencySiren() {
+                if (!this.audioContext) {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+
+                if (this.sirenActive) {
+                    this.stopSiren();
+                }
+                
+                this.oscillator = this.audioContext.createOscillator();
+                this.gainNode = this.audioContext.createGain();
+
+                this.oscillator.connect(this.gainNode);
+                this.gainNode.connect(this.audioContext.destination);
+
+                // Create INTENSE nonstop emergency siren
+                this.oscillator.type = 'sawtooth';
+                this.oscillator.frequency.setValueAtTime(600, this.audioContext.currentTime);
+                
+                // Extreme oscillation for maximum alert
+                this.oscillator.frequency.exponentialRampToValueAtTime(1400, this.audioContext.currentTime + 0.2);
+                this.oscillator.frequency.exponentialRampToValueAtTime(400, this.audioContext.currentTime + 0.4);
+                this.oscillator.frequency.exponentialRampToValueAtTime(1400, this.audioContext.currentTime + 0.6);
+                this.oscillator.frequency.exponentialRampToValueAtTime(400, this.audioContext.currentTime + 0.8);
+                
+                // MAX volume - nonstop
+                this.gainNode.gain.setValueAtTime(0.5, this.audioContext.currentTime);
+
+                this.oscillator.start();
+                this.sirenActive = true;
+
+                // Continue extreme oscillation NONSTOP
+                const intenseInterval = setInterval(() => {
+                    if (this.oscillator && this.nonstopAudio) {
+                        this.oscillator.frequency.exponentialRampToValueAtTime(1400, this.audioContext.currentTime + 0.2);
+                        this.oscillator.frequency.exponentialRampToValueAtTime(400, this.audioContext.currentTime + 0.4);
+                        this.oscillator.frequency.exponentialRampToValueAtTime(1400, this.audioContext.currentTime + 0.6);
+                        this.oscillator.frequency.exponentialRampToValueAtTime(400, this.audioContext.currentTime + 0.8);
+                    } else {
+                        clearInterval(intenseInterval);
+                    }
+                }, 800);
+            }
+
+            startSiren() {
+                if (this.nonstopAudio) return;
+                
+                if (!this.audioContext) {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+
+                if (this.sirenActive) return;
+                
+                this.oscillator = this.audioContext.createOscillator();
+                this.gainNode = this.audioContext.createGain();
+
+                this.oscillator.connect(this.gainNode);
+                this.gainNode.connect(this.audioContext.destination);
+
+                // Create intense Kahoot-style siren
+                this.oscillator.type = 'sawtooth';
+                this.oscillator.frequency.setValueAtTime(800, this.audioContext.currentTime);
+                
+                // Aggressive oscillation
+                this.oscillator.frequency.exponentialRampToValueAtTime(1200, this.audioContext.currentTime + 0.3);
+                this.oscillator.frequency.exponentialRampToValueAtTime(600, this.audioContext.currentTime + 0.6);
+                this.oscillator.frequency.exponentialRampToValueAtTime(1200, this.audioContext.currentTime + 0.9);
+                
+                // High volume
+                this.gainNode.gain.setValueAtTime(0.4, this.audioContext.currentTime);
+
+                this.oscillator.start();
+                this.sirenActive = true;
+
+                // Continue oscillation
+                setInterval(() => {
+                    if (this.oscillator && this.sirenActive && !this.nonstopAudio) {
+                        this.oscillator.frequency.exponentialRampToValueAtTime(1200, this.audioContext.currentTime + 0.3);
+                        this.oscillator.frequency.exponentialRampToValueAtTime(600, this.audioContext.currentTime + 0.6);
+                        this.oscillator.frequency.exponentialRampToValueAtTime(1200, this.audioContext.currentTime + 0.9);
+                    }
+                }, 900);
+            }
+
+            stopSiren() {
+                if (this.oscillator && this.sirenActive) {
+                    this.gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.5);
+                    setTimeout(() => {
+                        this.oscillator.stop();
+                        this.oscillator.disconnect();
+                        this.sirenActive = false;
+                        this.nonstopAudio = false;
+                    }, 500);
+                }
+            }
+
+            testSiren() {
+                if (this.sirenActive) {
+                    this.stopSiren();
+                    this.log('🔊 Test siren: STOPPED', 'audio');
+                } else {
+                    this.startSiren();
+                    setTimeout(() => {
+                        this.stopSiren();
+                    }, 3000);
+                    this.log('🔊 Test siren: 3-second test activated', 'audio');
+                }
+            }
+
+            async startCamera() {
+                const source = this.cameraSource.value;
+
+                if (this.cameraStream) {
+                    this.cameraStream.getTracks().forEach(track => track.stop());
+                }
+
+                if (source === 'webcam') {
+                    try {
+                        this.cameraStream = await navigator.mediaDevices.getUserMedia({
+                            video: { 
+                                width: { ideal: 1920 },
+                                height: { ideal: 1080 },
+                                facingMode: { ideal: 'environment' }
+                            }
+                        });
+                        this.videoFeed.srcObject = this.cameraStream;
+                        this.log('📹 Camera feed: Webcam activated - LIVE VIEW', 'success');
+                    } catch (error) {
+                        this.log(`❌ Webcam error: ${error.message}`, 'error');
+                        alert('📹 Camera access denied. Please allow camera permissions.');
+                    }
+                } else if (source === 'esp32') {
+                    // For ESP32-CAM, you would typically use an MJPEG stream
+                    this.videoFeed.srcObject = null;
+                    this.videoFeed.src = 'http://esp32-cam-ip/video';
+                    this.log('📹 Camera feed: ESP32-CAM stream requested', 'monitor');
+                }
             }
         }
-    }
 
-    function triggerPanic() {
-        document.getElementById('panic-screen').style.display = 'flex';
-        startSiren();
-        togglePump('1');
-    }
+        function connectRTSP() {
+            const url = document.getElementById('rtspUrl').value;
+            if (url) {
+                // Note: RTSP requires special handling, typically through a proxy or WebRTC
+                // This is a placeholder for RTSP integration
+                kahootFireSystem.log(`📹 RTSP stream: Attempting connection to ${url}`, 'monitor');
+                alert('📹 RTSP stream integration requires additional server-side components.\nFor demo purposes, please use Webcam option.');
+                document.getElementById('rtspModal').style.display = 'none';
+            }
+        }
 
-    function resetAlert() {
-        document.getElementById('panic-screen').style.display = 'none';
-        if (osc) osc.stop();
-        clearInterval(window.sirenInt);
-        togglePump('0');
-    }
+        // Initialize Kahoot Fire System
+        const kahootFireSystem = new KahootFireSystem();
 
-    async function togglePump(val) {
-        if (!port) return;
-        const writer = port.writable.getWriter();
-        await writer.write(new TextEncoder().encode(val));
-        writer.releaseLock();
-    }
-
-    // Webcam
-    navigator.mediaDevices.getUserMedia({video: true}).then(s => {
-        document.getElementById('v-feed').srcObject = s;
-    });
-</script>
+        // Simulate incoming serial data for demo purposes
+        setInterval(() => {
+            if (Math.random() < 0.005 && kahootFireSystem.serialPort) {
+                const zones = ['A', 'B', 'G'];
+                const values = zones.map(z => `${z}:${Math.floor(Math.random() * 100)}`);
+                kahootFireSystem.processSerialData(values.join(' '));
+            }
+        }, 1000);
+    </script>
 </body>
 </html>
