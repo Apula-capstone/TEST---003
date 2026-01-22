@@ -60,8 +60,8 @@ const CameraFeed: React.FC = () => {
       log(`Target IP: ${ip}`);
 
       // Step 2: Connect to local WebRTC Gateway (webrtc-streamer)
-      // Assuming running on localhost:8000
-      const STREAMER_URL = "http://localhost:8000"; 
+      // Defaults to localhost:8001 (Option B) if not specified
+      const STREAMER_URL = import.meta.env.VITE_WEBRTC_GATEWAY || "http://localhost:8001"; 
       log(`Contacting Gateway at ${STREAMER_URL}...`);
 
       const pc = new RTCPeerConnection({
@@ -95,17 +95,23 @@ const CameraFeed: React.FC = () => {
           headers: { "Content-Type": "application/json" } // webrtc-streamer expects JSON of RTCSessionDescription
       });
 
-      if (!response.ok) throw new Error(`Gateway Error: ${response.status}`);
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error(`404 Not Found: Gateway not seen at ${STREAMER_URL}. Is it running on this port?`);
+        }
+        throw new Error(`Gateway Error: ${response.status} ${response.statusText}`);
+      }
       
       const answer = await response.json();
       await pc.setRemoteDescription(answer);
       
       log("Tunnel Established - Waiting for tracks...");
 
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
       log("Connection Failed");
-      log("Ensure 'webrtc-streamer' is running on localhost:8000");
+      log(err.message || "Unknown Error");
+      log("Check RTSP_SETUP.md in project root");
       setIsRtspConnecting(false);
       if (peerConnectionRef.current) {
         peerConnectionRef.current.close();

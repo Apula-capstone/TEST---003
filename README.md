@@ -13,6 +13,11 @@ View your app in AI Studio: https://ai.studio/apps/drive/1XtVvY-lcNTnZwI7_N0yCOu
 **Prerequisites:**  Node.js
 
 
+## RTSP Camera Setup (WebRTC)
+
+To use the RTSP camera feed feature, you need to run a local WebRTC gateway.
+See [RTSP_SETUP.md](RTSP_SETUP.md) for detailed instructions.
+
 1. Install dependencies:
    `npm install`
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
