@@ -6,9 +6,10 @@ interface Props {
   state: ConnectionState;
   onConnect: () => void;
   onDisconnect: () => void;
+  label?: string;
 }
 
-const ArduinoConnect: React.FC<Props> = ({ state, onConnect, onDisconnect }) => {
+const ArduinoConnect: React.FC<Props> = ({ state, onConnect, onDisconnect, label }) => {
   const isConnected = state === ConnectionState.CONNECTED;
   const isConnecting = state === ConnectionState.CONNECTING;
 
@@ -19,7 +20,7 @@ const ArduinoConnect: React.FC<Props> = ({ state, onConnect, onDisconnect }) => 
           <div className="bg-orange-600 p-2 rounded-lg md:rounded-xl shadow-lg">
             <i className="fa-solid fa-microchip text-white text-lg md:text-xl"></i>
           </div>
-          <h2 className="text-lg md:text-xl font-black text-white uppercase tracking-tighter">Arduino UNO</h2>
+          <h2 className="text-lg md:text-xl font-black text-white uppercase tracking-tighter">{label || 'Arduino UNO'}</h2>
         </div>
         <div className={`px-2 py-0.5 md:px-3 md:py-1 rounded-full text-[8px] md:text-[10px] font-black uppercase transition-colors ${
           isConnected ? 'bg-emerald-500 text-white' : 'bg-stone-700 text-stone-400'

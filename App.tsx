@@ -28,6 +28,10 @@ const App: React.FC = () => {
   const serialPortRef = useRef<any>(null);
   const readerRef = useRef<any>(null);
   const fireInCurrentTurn = useRef(false);
+  const [serialImage, setSerialImage] = useState<string | null>(null);
+  const esp32PortRef = useRef<any>(null);
+  const espReaderRef = useRef<any>(null);
+  const [espConnection, setEspConnection] = useState<ConnectionState>(ConnectionState.DISCONNECTED);
 
   const handleLoadingFinished = () => {
     setIsLoading(false);
@@ -46,7 +50,13 @@ const App: React.FC = () => {
   }, [sensors, isAlarmActive]);
 
   const processSerialData = useCallback((data: string) => {
-    const cleanData = data.trim().toUpperCase();
+    const raw = data.trim();
+    if (raw.startsWith("IMAGE:")) {
+      const b64 = raw.slice(6).trim();
+      if (b64) setSerialImage(`data:image/jpeg;base64,${b64}`);
+      return;
+    }
+    const cleanData = raw.toUpperCase();
     if (isTestActive) return;
 
     // Detection logic:
@@ -134,6 +144,56 @@ const App: React.FC = () => {
     setConnection(ConnectionState.DISCONNECTED);
     setSensors(INITIAL_SENSORS);
     setIsTestActive(false);
+    setSerialImage(null);
+  };
+  
+  const connectESP32 = async () => {
+    if (!("serial" in navigator)) {
+      alert("Serial API not supported. Use a Desktop browser like Chrome or Edge.");
+      return;
+    }
+    setEspConnection(ConnectionState.CONNECTING);
+    try {
+      const port = await (navigator as any).serial.requestPort();
+      await port.open({ baudRate: 115200 });
+      esp32PortRef.current = port;
+      setEspConnection(ConnectionState.CONNECTED);
+      
+      const textDecoder = new TextDecoderStream();
+      port.readable.pipeTo(textDecoder.writable);
+      const reader = textDecoder.readable.getReader();
+      espReaderRef.current = reader;
+      
+      let buffer = '';
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        if (value) {
+          buffer += value;
+          const lines = buffer.split(/\r?\n/);
+          buffer = lines.pop() || '';
+          lines.forEach(line => {
+            const raw = line.trim();
+            if (raw.startsWith("IMAGE:")) {
+              const b64 = raw.slice(6).trim();
+              if (b64) setSerialImage(`data:image/jpeg;base64,${b64}`);
+            }
+          });
+        }
+      }
+    } catch (err) {
+      console.error("ESP32 Serial Error:", err);
+      setEspConnection(ConnectionState.ERROR);
+    }
+  };
+  
+  const disconnectESP32 = async () => {
+    try {
+      if (espReaderRef.current) await espReaderRef.current.cancel();
+      if (esp32PortRef.current) await esp32PortRef.current.close();
+    } catch (e) {}
+    setEspConnection(ConnectionState.DISCONNECTED);
+    setSerialImage(null);
   };
 
   const triggerTestAlarm = () => {
@@ -178,16 +238,22 @@ const App: React.FC = () => {
         <main className="mt-8 md:mt-12 grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10 items-start">
           <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-6 md:gap-10">
             <div className="h-[300px] sm:h-[450px] md:h-[600px] xl:h-[700px] w-full">
-              <CameraFeed />
+              <CameraFeed serialImage={serialImage || undefined} />
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-10">
               <ArduinoConnect 
                 state={connection} 
                 onConnect={connectArduino} 
-                onDisconnect={disconnectArduino} 
+                onDisconnect={disconnectArduino}
+                label="Arduino UNO"
               />
-              <Statistics data={history} fireCount={fireIncidentCount} />
+              <ArduinoConnect 
+                state={espConnection} 
+                onConnect={connectESP32} 
+                onDisconnect={disconnectESP32}
+                label="ESP32 Camera"
+              />
             </div>
           </div>
 

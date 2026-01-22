@@ -8,10 +8,7 @@ export enum SensorStatus {
 }
 
 export enum CameraSource {
-  WIFI = 'WiFi (ESP32)',
-  BLUETOOTH = 'Bluetooth',
-  WEBCAM = 'Webcam',
-  RTSP = 'RTSP Stream'
+  SERIAL = 'Serial (ESP32/Arduino)'
 }
 
 export enum ConnectionState {
