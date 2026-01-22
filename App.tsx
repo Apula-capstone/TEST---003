@@ -247,12 +247,14 @@ const App: React.FC = () => {
                 onConnect={connectArduino} 
                 onDisconnect={disconnectArduino}
                 label="Arduino UNO"
+                baudRate={9600}
               />
               <ArduinoConnect 
                 state={espConnection} 
                 onConnect={connectESP32} 
                 onDisconnect={disconnectESP32}
                 label="ESP32 Camera"
+                baudRate={115200}
               />
             </div>
           </div>

@@ -7,9 +7,10 @@ interface Props {
   onConnect: () => void;
   onDisconnect: () => void;
   label?: string;
+  baudRate?: number;
 }
 
-const ArduinoConnect: React.FC<Props> = ({ state, onConnect, onDisconnect, label }) => {
+const ArduinoConnect: React.FC<Props> = ({ state, onConnect, onDisconnect, label, baudRate = 9600 }) => {
   const isConnected = state === ConnectionState.CONNECTED;
   const isConnecting = state === ConnectionState.CONNECTING;
 
@@ -34,7 +35,7 @@ const ArduinoConnect: React.FC<Props> = ({ state, onConnect, onDisconnect, label
         <div className="grid grid-cols-2 gap-2 md:gap-4">
           <div className="bg-stone-800/50 p-2 rounded-lg">
             <span className="text-[8px] block text-stone-600 font-black">BAUD</span>
-            <span className="text-xs md:text-sm font-bold text-orange-400">9600</span>
+            <span className="text-xs md:text-sm font-bold text-orange-400">{baudRate}</span>
           </div>
           <div className="bg-stone-800/50 p-2 rounded-lg">
             <span className="text-[8px] block text-stone-600 font-black">PORT</span>

@@ -2,7 +2,6 @@
 import React, { useRef } from 'react';
 
 const CameraFeed: React.FC<{ serialImage?: string }> = ({ serialImage }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const sourceColors = { SERIAL: 'bg-yellow-600' } as const;
 
   return (
