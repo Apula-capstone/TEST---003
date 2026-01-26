@@ -160,6 +160,38 @@ const DownloadPage: React.FC<Props> = ({ onBack }) => {
                     </div>
                   </div>
                 </div>
+
+                {/* Step 5: True Offline (No Router) */}
+                <div className="mt-8 pt-8 border-t border-white/5">
+                  <h2 className="text-2xl font-black uppercase tracking-tight mb-6 text-white flex items-center gap-3">
+                    <i className="fa-solid fa-tower-broadcast text-emerald-500"></i>
+                    No Router? Use Hotspot Mode
+                  </h2>
+                  <p className="text-stone-400 text-sm font-bold leading-relaxed mb-6">
+                    If you are in a location with **zero internet and no Wi-Fi router**, the APULA system will automatically create its own Wi-Fi network.
+                  </p>
+                  
+                  <div className="bg-emerald-600/10 border border-emerald-600/20 p-6 rounded-3xl">
+                    <div className="flex flex-col md:flex-row gap-6">
+                      <div className="flex-1">
+                        <p className="text-emerald-500 font-black uppercase text-[10px] tracking-widest mb-2">How to connect:</p>
+                        <ol className="space-y-3 text-xs font-bold text-stone-300">
+                          <li>1. Turn on your ESP32 devices.</li>
+                          <li>2. On your laptop, look for Wi-Fi named <span className="text-white">"APULA_SENSOR_NODE"</span> or <span className="text-white">"APULA_CAMERA"</span>.</li>
+                          <li>3. Connect using password: <span className="text-orange-500 font-black">apula123</span></li>
+                          <li>4. Use IP <span className="text-emerald-500 font-black">192.168.4.1</span> in the dashboard.</li>
+                        </ol>
+                      </div>
+                      <div className="md:w-px md:bg-white/10"></div>
+                      <div className="flex-1">
+                        <p className="text-orange-500 font-black uppercase text-[10px] tracking-widest mb-2">Note:</p>
+                        <p className="text-[10px] text-stone-500 italic leading-relaxed">
+                          Hotspot mode is a backup. For the best experience (connecting both camera and sensors at once), using a central router is recommended.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </section>

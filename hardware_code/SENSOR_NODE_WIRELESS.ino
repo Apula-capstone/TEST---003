@@ -73,10 +73,12 @@ void setup() {
       Serial.print("IP Address: ");
       Serial.println(WiFi.localIP());
     } else {
-      Serial.println("\nFailed to connect. Waiting for Serial Config...");
+      Serial.println("\nFailed to connect to Router.");
+      startAPMode();
     }
   } else {
-    Serial.println("\nNo Wi-Fi credentials stored. Please use the dashboard to Sync.");
+    Serial.println("\nNo Wi-Fi credentials stored.");
+    startAPMode();
   }
 
   // Start WebSocket Server
@@ -84,6 +86,14 @@ void setup() {
   webSocket.onEvent(onWebSocketEvent);
   
   Serial.println("APULA Multi-Device Server Started (Port 81)");
+}
+
+void startAPMode() {
+  Serial.println("Starting Hotspot Mode...");
+  WiFi.softAP("APULA_SENSOR_NODE", "apula123");
+  Serial.print("Hotspot Active! Connect to 'APULA_SENSOR_NODE' (Pass: apula123)\nIP: ");
+  Serial.println(WiFi.softAPIP());
+  digitalWrite(STATUS_LED, HIGH);
 }
 
 unsigned long lastUpdate = 0;

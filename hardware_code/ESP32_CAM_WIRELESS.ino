@@ -98,11 +98,21 @@ void setup() {
       Serial.println("' to connect");
       startCameraServer();
     } else {
-      Serial.println("\nFailed to connect. Waiting for Serial Config...");
+      Serial.println("\nFailed to connect to Router.");
+      startAPMode();
     }
   } else {
-    Serial.println("\nNo Wi-Fi stored. Use the dashboard to Sync.");
+    Serial.println("\nNo Wi-Fi stored.");
+    startAPMode();
   }
+}
+
+void startAPMode() {
+  Serial.println("Starting Hotspot Mode...");
+  WiFi.softAP("APULA_CAMERA", "apula123");
+  Serial.print("Hotspot Active! Connect to 'APULA_CAMERA' (Pass: apula123)\nIP: ");
+  Serial.println(WiFi.softAPIP());
+  startCameraServer();
 }
 
 void loop() {
