@@ -1,11 +1,13 @@
 #include "esp_camera.h"
 #include <WiFi.h>
+#include <Preferences.h>
 
 // ===================
-// WIFI CREDENTIALS
+// WIFI SETTINGS
 // ===================
-const char* ssid = "YOUR_WIFI_NAME";
-const char* password = "YOUR_WIFI_PASSWORD";
+Preferences preferences;
+String ssid = "";
+String password = "";
 
 // ===================
 // CAMERA MODEL (AI-THINKER)
@@ -73,23 +75,58 @@ void setup() {
     return;
   }
 
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
+  // Load stored credentials
+  preferences.begin("apula-wifi", false);
+  ssid = preferences.getString("ssid", "");
+  password = preferences.getString("pass", "");
+
+  if (ssid != "") {
+    Serial.println("\nConnecting to Wi-Fi: " + ssid);
+    WiFi.begin(ssid.c_str(), password.c_str());
+    
+    int counter = 0;
+    while (WiFi.status() != WL_CONNECTED && counter < 20) {
+      delay(500);
+      Serial.print(".");
+      counter++;
+    }
+    
+    if (WiFi.status() == WL_CONNECTED) {
+      Serial.println("\nWiFi Connected!");
+      Serial.print("Camera Ready! Use 'http://");
+      Serial.print(WiFi.localIP());
+      Serial.println("' to connect");
+      startCameraServer();
+    } else {
+      Serial.println("\nFailed to connect. Waiting for Serial Config...");
+    }
+  } else {
+    Serial.println("\nNo Wi-Fi stored. Use the dashboard to Sync.");
   }
-  Serial.println("");
-  Serial.println("WiFi connected");
-
-  startCameraServer();
-
-  Serial.print("Camera Ready! Use 'http://");
-  Serial.print(WiFi.localIP());
-  Serial.println("' to connect");
 }
 
 void loop() {
-  delay(10000);
+  // Handle Serial Configuration (from dashboard)
+  if (Serial.available()) {
+    String input = Serial.readStringUntil('\n');
+    if (input.startsWith("WIFI:")) {
+      String data = input.substring(5);
+      int commaIndex = data.indexOf(',');
+      if (commaIndex != -1) {
+        ssid = data.substring(0, commaIndex);
+        password = data.substring(commaIndex + 1);
+        
+        preferences.putString("ssid", ssid);
+        preferences.putString("pass", password);
+        
+        Serial.println("CREDENTIALS_SAVED");
+        Serial.println("REBOOTING...");
+        delay(1000);
+        ESP.restart();
+      }
+    }
+  }
+  delay(100);
 }
 
 // ---------------------------------------------------------

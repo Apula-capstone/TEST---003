@@ -1,11 +1,13 @@
 #include <WiFi.h>
 #include <WebSocketsServer.h>
+#include <Preferences.h>
 
 // ==========================================
-// WIFI CREDENTIALS (CHANGE THESE)
+// WIFI SETTINGS
 // ==========================================
-const char* ssid = "YOUR_WIFI_NAME";
-const char* password = "YOUR_WIFI_PASSWORD";
+Preferences preferences;
+String ssid = "";
+String password = "";
 
 // ==========================================
 // PIN CONFIGURATION
@@ -48,19 +50,34 @@ void setup() {
   pinMode(BUZZER_PIN, OUTPUT);
   pinMode(STATUS_LED, OUTPUT);
 
-  // Connect to Wi-Fi
-  WiFi.begin(ssid, password);
-  Serial.print("Connecting to Wi-Fi");
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-    digitalWrite(STATUS_LED, !digitalRead(STATUS_LED)); // Blink while connecting
+  // Load stored credentials
+  preferences.begin("apula-wifi", false);
+  ssid = preferences.getString("ssid", "");
+  password = preferences.getString("pass", "");
+
+  if (ssid != "") {
+    Serial.println("\nConnecting to stored Wi-Fi: " + ssid);
+    WiFi.begin(ssid.c_str(), password.c_str());
+    
+    int counter = 0;
+    while (WiFi.status() != WL_CONNECTED && counter < 20) {
+      delay(500);
+      Serial.print(".");
+      digitalWrite(STATUS_LED, !digitalRead(STATUS_LED));
+      counter++;
+    }
+    
+    if (WiFi.status() == WL_CONNECTED) {
+      digitalWrite(STATUS_LED, HIGH);
+      Serial.println("\nWiFi Connected!");
+      Serial.print("IP Address: ");
+      Serial.println(WiFi.localIP());
+    } else {
+      Serial.println("\nFailed to connect. Waiting for Serial Config...");
+    }
+  } else {
+    Serial.println("\nNo Wi-Fi credentials stored. Please use the dashboard to Sync.");
   }
-  
-  digitalWrite(STATUS_LED, HIGH); // Solid when connected
-  Serial.println("\nWiFi Connected!");
-  Serial.print("IP Address: ");
-  Serial.println(WiFi.localIP());
 
   // Start WebSocket Server
   webSocket.begin();
@@ -74,6 +91,28 @@ bool fireDetected = false;
 
 void loop() {
   webSocket.loop();
+
+  // Handle Serial Configuration (from dashboard)
+  if (Serial.available()) {
+    String input = Serial.readStringUntil('\n');
+    if (input.startsWith("WIFI:")) {
+      String data = input.substring(5);
+      int commaIndex = data.indexOf(',');
+      if (commaIndex != -1) {
+        ssid = data.substring(0, commaIndex);
+        password = data.substring(commaIndex + 1);
+        
+        // Save to preferences
+        preferences.putString("ssid", ssid);
+        preferences.putString("pass", password);
+        
+        Serial.println("CREDENTIALS_SAVED");
+        Serial.println("REBOOTING...");
+        delay(1000);
+        ESP.restart();
+      }
+    }
+  }
 
   // Read Sensors (Low = Fire for most IR sensors)
   int s1 = digitalRead(FLAME_ALPHA);
