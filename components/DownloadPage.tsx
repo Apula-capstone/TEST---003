@@ -17,61 +17,74 @@ const DownloadPage: React.FC<Props> = ({ onBack }) => {
         </button>
 
         <header className="mb-12 border-l-8 border-orange-600 pl-6">
-          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-2">Offline Deployment</h1>
-          <p className="text-stone-500 font-bold uppercase tracking-widest text-sm md:text-base">Complete Guide for Local APULA Installation</p>
+          <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-2">Offline Setup</h1>
+          <p className="text-stone-500 font-bold uppercase tracking-widest text-sm md:text-base">Everything you need in one package</p>
         </header>
 
         <div className="grid grid-cols-1 gap-8">
-          {/* Step 1: Download */}
-          <section className="bg-stone-900 rounded-[30px] p-8 border-b-8 border-stone-800 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-orange-600/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
-            <div className="flex items-start gap-6 relative z-10">
-              <div className="bg-orange-600 w-12 h-12 rounded-2xl flex items-center justify-center font-black text-2xl shrink-0 shadow-lg shadow-orange-600/20">1</div>
-              <div>
-                <h2 className="text-2xl font-black uppercase tracking-tight mb-4">Download Source Code</h2>
-                <p className="text-stone-400 mb-6 leading-relaxed">
-                  To run APULA offline, you need the complete project files on your local machine.
-                </p>
-                <button className="bg-white text-stone-950 font-black px-8 py-4 rounded-2xl uppercase tracking-widest hover:bg-orange-500 hover:text-white transition-all flex items-center gap-3 active:scale-95 shadow-xl">
-                  <i className="fa-solid fa-download"></i>
-                  Download ZIP Archive
-                </button>
+          {/* Step 1: The All-in-One Package */}
+          <section className="bg-orange-600 rounded-[30px] p-8 md:p-10 text-white relative overflow-hidden group shadow-2xl">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+            <div className="relative z-10">
+              <div className="flex items-center gap-4 mb-6">
+                <div className="bg-white text-orange-600 w-14 h-14 rounded-2xl flex items-center justify-center font-black text-3xl shadow-xl">1</div>
+                <h2 className="text-3xl font-black uppercase tracking-tight">Download the Package</h2>
               </div>
+              <p className="text-orange-100 mb-8 text-lg font-bold leading-relaxed">
+                Click the button below to get the **"APULA Offline Kit"**. <br/>
+                This ZIP file contains the software **AND** the Node.js installer so you don't need the internet later.
+              </p>
+              <a 
+                href="./APULA_OFFLINE_KIT.zip" 
+                download
+                className="inline-flex items-center gap-4 bg-white text-stone-950 font-black px-10 py-6 rounded-[25px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-2xl text-xl"
+              >
+                <i className="fa-solid fa-file-zipper text-2xl"></i>
+                Download Offline Kit
+              </a>
+              <p className="mt-4 text-xs font-black uppercase tracking-widest opacity-60 italic">* Size: ~50MB // Includes Node.js Installer</p>
             </div>
           </section>
 
-          {/* Step 2: Install Node.js */}
+          {/* Step 2: Simple Install */}
           <section className="bg-stone-900 rounded-[30px] p-8 border-b-8 border-stone-800 relative overflow-hidden group">
             <div className="flex items-start gap-6 relative z-10">
               <div className="bg-stone-800 w-12 h-12 rounded-2xl flex items-center justify-center font-black text-2xl shrink-0 border border-white/5">2</div>
               <div>
-                <h2 className="text-2xl font-black uppercase tracking-tight mb-4">Install Runtime Environment</h2>
-                <p className="text-stone-400 mb-4 leading-relaxed">
-                  Install <strong>Node.js (LTS version)</strong>. This allows the application to serve files and handle hardware communication locally.
-                </p>
-                <a href="https://nodejs.org/" target="_blank" rel="noopener noreferrer" className="text-orange-500 font-bold hover:underline inline-flex items-center gap-2">
-                  Visit nodejs.org <i className="fa-solid fa-external-link text-xs"></i>
-                </a>
+                <h2 className="text-2xl font-black uppercase tracking-tight mb-4 text-white">How to Install</h2>
+                <ul className="space-y-4 text-stone-400 font-bold">
+                  <li className="flex items-center gap-3">
+                    <i className="fa-solid fa-check text-orange-500"></i>
+                    Open the ZIP file you just downloaded.
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <i className="fa-solid fa-check text-orange-500"></i>
+                    Run the **"nodejs-installer.msi"** inside first.
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <i className="fa-solid fa-check text-orange-500"></i>
+                    Just keep clicking "Next" until the installer finishes.
+                  </li>
+                </ul>
               </div>
             </div>
           </section>
 
-          {/* Step 3: Local Setup */}
+          {/* Step 3: Run the System */}
           <section className="bg-stone-900 rounded-[30px] p-8 border-b-8 border-stone-800 relative overflow-hidden group">
             <div className="flex items-start gap-6 relative z-10">
               <div className="bg-stone-800 w-12 h-12 rounded-2xl flex items-center justify-center font-black text-2xl shrink-0 border border-white/5">3</div>
               <div className="w-full">
-                <h2 className="text-2xl font-black uppercase tracking-tight mb-4">Initialize & Run</h2>
-                <p className="text-stone-400 mb-6 leading-relaxed">Open your terminal in the project folder and execute these commands:</p>
+                <h2 className="text-2xl font-black uppercase tracking-tight mb-4 text-white">Start APULA</h2>
+                <p className="text-stone-400 mb-6 font-bold">Double-click the file named **"START_APULA.bat"** in the folder.</p>
                 
-                <div className="bg-stone-950 rounded-2xl p-6 border border-white/5 font-mono text-sm space-y-4 shadow-inner">
-                  <div>
-                    <span className="text-stone-600 block mb-1"># Install dependencies</span>
-                    <code className="text-orange-500">npm install</code>
+                <div className="bg-stone-950 rounded-2xl p-6 border border-white/5 flex items-center gap-4 shadow-inner">
+                  <div className="bg-emerald-500/10 p-4 rounded-xl">
+                    <i className="fa-solid fa-terminal text-emerald-500 text-2xl"></i>
                   </div>
-                  <div className="pt-2 border-t border-white/5">
-                    <span className="text-stone-600 block mb-1"># Start offline server</span>
-                    <code className="text-emerald-500">npm run dev</code>
+                  <div>
+                    <p className="text-emerald-500 font-black uppercase text-xs tracking-widest">Auto-Runner Active</p>
+                    <p className="text-stone-500 text-[10px] font-bold">The system will open in your browser automatically.</p>
                   </div>
                 </div>
               </div>
