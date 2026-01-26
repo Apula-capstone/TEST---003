@@ -78,7 +78,7 @@ const DownloadPage: React.FC<Props> = ({ onBack }) => {
                 <h2 className="text-2xl font-black uppercase tracking-tight mb-4 text-white">Start APULA</h2>
                 <p className="text-stone-400 mb-6 font-bold">Double-click the file named **"START_APULA.bat"** in the folder.</p>
                 
-                <div className="bg-stone-950 rounded-2xl p-6 border border-white/5 flex items-center gap-4 shadow-inner">
+                <div className="bg-stone-950 rounded-2xl p-6 border border-white/5 flex items-center gap-4 shadow-inner mb-6">
                   <div className="bg-emerald-500/10 p-4 rounded-xl">
                     <i className="fa-solid fa-terminal text-emerald-500 text-2xl"></i>
                   </div>
@@ -86,6 +86,17 @@ const DownloadPage: React.FC<Props> = ({ onBack }) => {
                     <p className="text-emerald-500 font-black uppercase text-xs tracking-widest">Auto-Runner Active</p>
                     <p className="text-stone-500 text-[10px] font-bold">The system will open in your browser automatically.</p>
                   </div>
+                </div>
+
+                {/* Troubleshooting */}
+                <div className="bg-orange-500/10 border border-orange-500/20 rounded-2xl p-4">
+                  <p className="text-orange-500 text-[10px] font-black uppercase mb-1">
+                    <i className="fa-solid fa-circle-info mr-2"></i>
+                    Not working?
+                  </p>
+                  <p className="text-stone-500 text-xs font-bold leading-tight">
+                    If the black window closes immediately, please **RESTART** your computer. This finishes the Node.js installation.
+                  </p>
                 </div>
               </div>
             </div>
