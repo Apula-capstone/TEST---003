@@ -208,14 +208,22 @@ const App: React.FC = () => {
       <div className="max-w-[1700px] mx-auto px-4 pb-12 overflow-x-hidden">
         <Header />
         
-        {/* Offline Mode Entry Point */}
-        <div className="mt-6 flex justify-end">
+        {/* Navigation Controls */}
+        <div className="mt-6 flex justify-end gap-3 md:gap-4">
           <button 
             onClick={() => setIsDownloadMode(true)}
-            className="bg-stone-900 hover:bg-orange-600 text-orange-500 hover:text-white px-6 py-3 rounded-2xl border-2 border-orange-600/30 hover:border-orange-500 transition-all font-black uppercase tracking-widest text-[10px] md:text-xs flex items-center gap-3 shadow-lg group"
+            className="bg-stone-900 hover:bg-emerald-600 text-emerald-500 hover:text-white px-5 md:px-8 py-3 md:py-4 rounded-2xl border-2 border-emerald-600/30 hover:border-emerald-500 transition-all font-black uppercase tracking-widest text-[9px] md:text-xs flex items-center gap-3 shadow-lg group"
+          >
+            <i className="fa-solid fa-book-open group-hover:scale-110 transition-transform"></i>
+            System Guides
+          </button>
+          
+          <button 
+            onClick={() => setIsDownloadMode(true)}
+            className="bg-stone-900 hover:bg-orange-600 text-orange-500 hover:text-white px-5 md:px-8 py-3 md:py-4 rounded-2xl border-2 border-orange-600/30 hover:border-orange-500 transition-all font-black uppercase tracking-widest text-[9px] md:text-xs flex items-center gap-3 shadow-lg group"
           >
             <i className="fa-solid fa-cloud-arrow-down group-hover:bounce"></i>
-            Enable Offline Mode
+            Offline Mode
           </button>
         </div>
         
