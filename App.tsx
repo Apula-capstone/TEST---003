@@ -27,12 +27,9 @@ const App: React.FC = () => {
   const [isAlarmActive, setIsAlarmActive] = useState(false);
   const [isTestActive, setIsTestActive] = useState(false);
   
-  const serialPortRef = useRef<any>(null);
-  const readerRef = useRef<any>(null);
+  const [wirelessCameraUrl, setWirelessCameraUrl] = useState<string | null>(null);
+  const sensorSocketRef = useRef<WebSocket | null>(null);
   const fireInCurrentTurn = useRef(false);
-  const [serialImage, setSerialImage] = useState<string | null>(null);
-  const esp32PortRef = useRef<any>(null);
-  const espReaderRef = useRef<any>(null);
   const [espConnection, setEspConnection] = useState<ConnectionState>(ConnectionState.DISCONNECTED);
 
   const handleLoadingFinished = () => {
@@ -51,45 +48,28 @@ const App: React.FC = () => {
     }
   }, [sensors, isAlarmActive]);
 
-  const processSerialData = useCallback((data: string) => {
-    const raw = data.trim();
-    if (raw.startsWith("IMAGE:")) {
-      const b64 = raw.slice(6).trim();
-      if (b64) setSerialImage(`data:image/jpeg;base64,${b64}`);
-      return;
-    }
-    const cleanData = raw.toUpperCase();
+  const processSensorData = useCallback((data: string) => {
+    const raw = data.trim().toUpperCase();
     if (isTestActive) return;
 
-    // Detection logic:
-    // 1. Check for "SENSORS:x,y,z" (0=FIRE, 1=SAFE)
-    // 2. Check for "FIRE" anywhere in the stream
-    // 3. Fallback to raw CSV parsing if it contains 0s and 1s
-    
     let sensorTriggered = [false, false, false];
 
-    if (cleanData.includes("SENSORS:")) {
-      const payload = cleanData.split("SENSORS:")[1];
+    if (raw.includes("SENSORS:")) {
+      const payload = raw.split("SENSORS:")[1];
       const values = payload.split(',').map(v => parseInt(v.trim(), 10));
       if (values.length >= 3) {
         sensorTriggered = values.map(v => v === 0);
       }
-    } else if (cleanData.includes("FIRE")) {
-      // If "FIRE" is detected without specific zone, we check for specific labels
-      sensorTriggered[0] = cleanData.includes("ALPHA") || cleanData.includes("SENSOR1");
-      sensorTriggered[1] = cleanData.includes("BETA") || cleanData.includes("SENSOR2");
-      sensorTriggered[2] = cleanData.includes("GAMMA") || cleanData.includes("SENSOR3");
-      // If no specific zone, trigger all as a fallback
+    } else if (raw.includes("FIRE")) {
+      sensorTriggered[0] = raw.includes("ALPHA") || raw.includes("SENSOR1");
+      sensorTriggered[1] = raw.includes("BETA") || raw.includes("SENSOR2");
+      sensorTriggered[2] = raw.includes("GAMMA") || raw.includes("SENSOR3");
       if (!sensorTriggered.some(v => v)) sensorTriggered = [true, true, true];
-    } else if (/^[01],[01],[01]$/.test(cleanData)) {
-      const values = cleanData.split(',').map(v => parseInt(v.trim(), 10));
-      sensorTriggered = values.map(v => v === 0);
     }
 
-    if (sensorTriggered.some(v => v) || cleanData.length > 0) {
+    if (sensorTriggered.some(v => v) || raw.length > 0) {
       setSensors(prev => prev.map((s, i) => {
         const isFlame = sensorTriggered[i];
-        // If we didn't explicitly trigger this sensor and there's no data, keep prev status if safe
         const newStatus = isFlame ? SensorStatus.FIRE_DETECTED : SensorStatus.SAFE;
         
         return {
@@ -102,100 +82,64 @@ const App: React.FC = () => {
     }
   }, [isTestActive]);
 
-  const connectArduino = async () => {
-    if (!("serial" in navigator)) {
-      alert("Serial API not supported. Use a Desktop browser like Chrome or Edge.");
-      return;
-    }
+  const connectWirelessSensors = (ip: string) => {
+    if (sensorSocketRef.current) sensorSocketRef.current.close();
+    
     setConnection(ConnectionState.CONNECTING);
     try {
-      const port = await (navigator as any).serial.requestPort();
-      await port.open({ baudRate: 9600 });
-      serialPortRef.current = port;
-      setConnection(ConnectionState.CONNECTED);
+      const socket = new WebSocket(`ws://${ip}:81`);
       
-      const textDecoder = new TextDecoderStream();
-      port.readable.pipeTo(textDecoder.writable);
-      const reader = textDecoder.readable.getReader();
-      readerRef.current = reader;
-      
-      setSensors(prev => prev.map(s => ({ ...s, status: SensorStatus.READY })));
+      socket.onopen = () => {
+        setConnection(ConnectionState.CONNECTED);
+        setSensors(prev => prev.map(s => ({ ...s, status: SensorStatus.READY })));
+      };
 
-      let buffer = '';
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
-        if (value) {
-          buffer += value;
-          const lines = buffer.split(/\r?\n/);
-          buffer = lines.pop() || '';
-          lines.forEach(line => processSerialData(line));
-        }
-      }
+      socket.onmessage = (event) => {
+        processSensorData(event.data);
+      };
+
+      socket.onclose = () => {
+        setConnection(ConnectionState.DISCONNECTED);
+        setSensors(INITIAL_SENSORS);
+      };
+
+      socket.onerror = () => {
+        setConnection(ConnectionState.ERROR);
+      };
+
+      sensorSocketRef.current = socket;
     } catch (err) {
-      console.error("Serial Error:", err);
       setConnection(ConnectionState.ERROR);
     }
   };
 
-  const disconnectArduino = async () => {
-    try {
-      if (readerRef.current) await readerRef.current.cancel();
-      if (serialPortRef.current) await serialPortRef.current.close();
-    } catch (e) {}
+  const disconnectWirelessSensors = () => {
+    if (sensorSocketRef.current) sensorSocketRef.current.close();
     setConnection(ConnectionState.DISCONNECTED);
     setSensors(INITIAL_SENSORS);
-    setIsTestActive(false);
-    setSerialImage(null);
   };
   
-  const connectESP32 = async () => {
-    if (!("serial" in navigator)) {
-      alert("Serial API not supported. Use a Desktop browser like Chrome or Edge.");
-      return;
-    }
+  const connectWirelessCamera = (ip: string) => {
     setEspConnection(ConnectionState.CONNECTING);
-    try {
-      const port = await (navigator as any).serial.requestPort();
-      await port.open({ baudRate: 115200 });
-      esp32PortRef.current = port;
+    // ESP32-CAM usually serves MJPEG at :81/stream or :80/capture
+    // We'll test the connection by trying to load the stream
+    const streamUrl = `http://${ip}/stream`;
+    
+    const img = new Image();
+    img.onload = () => {
+      setWirelessCameraUrl(streamUrl);
       setEspConnection(ConnectionState.CONNECTED);
-      
-      const textDecoder = new TextDecoderStream();
-      port.readable.pipeTo(textDecoder.writable);
-      const reader = textDecoder.readable.getReader();
-      espReaderRef.current = reader;
-      
-      let buffer = '';
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
-        if (value) {
-          buffer += value;
-          const lines = buffer.split(/\r?\n/);
-          buffer = lines.pop() || '';
-          lines.forEach(line => {
-            const raw = line.trim();
-            if (raw.startsWith("IMAGE:")) {
-              const b64 = raw.slice(6).trim();
-              if (b64) setSerialImage(`data:image/jpeg;base64,${b64}`);
-            }
-          });
-        }
-      }
-    } catch (err) {
-      console.error("ESP32 Serial Error:", err);
+    };
+    img.onerror = () => {
       setEspConnection(ConnectionState.ERROR);
-    }
+      setWirelessCameraUrl(null);
+    };
+    img.src = streamUrl;
   };
   
-  const disconnectESP32 = async () => {
-    try {
-      if (espReaderRef.current) await espReaderRef.current.cancel();
-      if (esp32PortRef.current) await esp32PortRef.current.close();
-    } catch (e) {}
+  const disconnectWirelessCamera = () => {
+    setWirelessCameraUrl(null);
     setEspConnection(ConnectionState.DISCONNECTED);
-    setSerialImage(null);
   };
 
   const triggerTestAlarm = () => {
@@ -255,23 +199,26 @@ const App: React.FC = () => {
         <main className="mt-8 md:mt-12 grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-10 items-start">
           <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-6 md:gap-10">
             <div className="h-[300px] sm:h-[450px] md:h-[600px] xl:h-[700px] w-full">
-              <CameraFeed serialImage={serialImage || undefined} />
+              <CameraFeed 
+                isWireless={true}
+                wirelessUrl={wirelessCameraUrl || undefined}
+              />
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-10">
               <ArduinoConnect 
                 state={connection} 
-                onConnect={connectArduino} 
-                onDisconnect={disconnectArduino}
-                label="Arduino UNO"
-                baudRate={9600}
+                onConnect={connectWirelessSensors} 
+                onDisconnect={disconnectWirelessSensors}
+                label="Sensor Node (WIFI)"
+                defaultIp="192.168.1.10"
               />
               <ArduinoConnect 
                 state={espConnection} 
-                onConnect={connectESP32} 
-                onDisconnect={disconnectESP32}
-                label="ESP32 Camera"
-                baudRate={115200}
+                onConnect={connectWirelessCamera} 
+                onDisconnect={disconnectWirelessCamera}
+                label="ESP32 Camera (WIFI)"
+                defaultIp="192.168.1.20"
               />
             </div>
 
