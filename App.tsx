@@ -8,6 +8,7 @@ import ArduinoConnect from './components/ArduinoConnect';
 import AlarmSystem from './components/AlarmSystem';
 import LoadingScreen from './components/LoadingScreen';
 import DownloadPage from './components/DownloadPage';
+import ManualPage from './components/ManualPage';
 import { SensorData, SensorStatus, HistoryPoint, ConnectionState } from './types';
 
 const INITIAL_SENSORS: SensorData[] = [
@@ -142,29 +143,6 @@ const App: React.FC = () => {
     setEspConnection(ConnectionState.DISCONNECTED);
   };
 
-  const provisionWifi = async (ssid: string, pass: string) => {
-    try {
-      // @ts-ignore - Web Serial API
-      const port = await navigator.serial.requestPort();
-      await port.open({ baudRate: 115200 });
-      
-      const encoder = new TextEncoder();
-      const writer = port.writable.getWriter();
-      
-      // Format: WIFI:ssid,pass\n
-      const command = `WIFI:${ssid},${pass}\n`;
-      await writer.write(encoder.encode(command));
-      
-      writer.releaseLock();
-      await port.close();
-      
-      alert(`Provisioning successful! The device will now try to connect to "${ssid}". Check its Serial Monitor for the IP address.`);
-    } catch (err) {
-      console.error('Provisioning failed:', err);
-      alert('Provisioning failed. Make sure the device is connected via USB and you are using a supported browser (Chrome/Edge).');
-    }
-  };
-
   const triggerTestAlarm = () => {
     setIsTestActive(true);
     setSensors(prev => prev.map((s, i) => i === 0 ? { 
@@ -211,7 +189,7 @@ const App: React.FC = () => {
         {/* Navigation Controls */}
         <div className="mt-6 flex justify-end gap-3 md:gap-4">
           <button 
-            onClick={() => setIsDownloadMode(true)}
+            onClick={() => setIsManualMode(true)}
             className="bg-stone-900 hover:bg-emerald-600 text-emerald-500 hover:text-white px-5 md:px-8 py-3 md:py-4 rounded-2xl border-2 border-emerald-600/30 hover:border-emerald-500 transition-all font-black uppercase tracking-widest text-[9px] md:text-xs flex items-center gap-3 shadow-lg group"
           >
             <i className="fa-solid fa-book-open group-hover:scale-110 transition-transform"></i>
@@ -241,16 +219,14 @@ const App: React.FC = () => {
                 state={connection} 
                 onConnect={connectWirelessSensors} 
                 onDisconnect={disconnectWirelessSensors}
-                onProvision={provisionWifi}
-                label="Sensor Node (WIFI)"
+                label="Sensor Node"
                 defaultIp="192.168.1.10"
               />
               <ArduinoConnect 
                 state={espConnection} 
                 onConnect={connectWirelessCamera} 
                 onDisconnect={disconnectWirelessCamera}
-                onProvision={provisionWifi}
-                label="ESP32 Camera (WIFI)"
+                label="ESP32 Camera"
                 defaultIp="192.168.1.20"
               />
             </div>
